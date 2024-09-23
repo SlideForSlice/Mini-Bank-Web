@@ -1,5 +1,6 @@
 package com.java.bank.models;
 
+import com.java.bank.models.enums.DepositStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,4 +43,11 @@ public class Deposit {
     @JoinColumn(name = "bank_account", referencedColumnName = "id")
     private BankAccount bankAccount;
 
+    public Deposit(String depositNum, float balance, float interest, LocalDate endDate, DepositStatus status) {
+        this.depositNum = depositNum;
+        this.balance = balance;
+        this.interest = interest;
+        this.endDate = endDate;
+        this.status = status;
+    }
 }

@@ -1,5 +1,6 @@
 package com.java.bank.models;
 
+import com.java.bank.models.enums.CardStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -39,9 +40,10 @@ public class Card {
     private BankAccount bankAccount;
 
 
-    public Card(String cardNumber, LocalDate openDate, CardStatus status) {
+    public Card(String cardNumber, LocalDate openDate, CardStatus status, float balance) {
         this.cardNumber = cardNumber;
         this.openDate = openDate;
         this.status = status;
+        this.balance = balance;
     }
 }
