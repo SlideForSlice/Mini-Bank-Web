@@ -12,7 +12,7 @@ create table bank_account(
                              address varchar(200) not null,
                              phone_number char(10) unique,
                              email varchar(95) unique not null,
-                             user_id int references user(id) on delete cascade
+                             user_id int references user_cred(id) on delete cascade
 
 );
 
@@ -32,7 +32,7 @@ create table credit(
                        loan_debt decimal(10,2),
                        interest decimal(2,1) not null,
                        open_date timestamp default current_timestamp,
-                       end_date date not null,
+                       end_date timestamp not null,
                        Status VARCHAR(10) DEFAULT 'Active' CHECK (Status IN ('Active', 'Paid', 'Defaulted'))
 );
 
@@ -43,6 +43,6 @@ create table deposit(
                         balance decimal(10,2),
                         interest decimal(2,1) not null,
                         open_date timestamp default current_timestamp,
-                        end_date date not null,
+                        end_date timestamp not null,
                         Status VARCHAR(10) DEFAULT 'Active' CHECK (Status IN ('Active', 'Closed'))
 )

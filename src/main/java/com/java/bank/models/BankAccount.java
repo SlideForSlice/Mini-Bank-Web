@@ -5,6 +5,7 @@ import org.hibernate.annotations.Cascade;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name="bank_account")
@@ -37,7 +38,9 @@ public class BankAccount implements Serializable {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User userId;
 
+    @OneToMany(mappedBy = "bankAccount")
+    private List<Card> cards;
 
-
-
+    @OneToMany(mappedBy = "bankAccount")
+    private List<Deposit> deposits;
 }
