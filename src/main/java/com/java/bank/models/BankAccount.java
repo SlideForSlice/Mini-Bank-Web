@@ -1,6 +1,9 @@
 package com.java.bank.models;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Cascade;
 
 import java.io.Serializable;
@@ -8,6 +11,9 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 @Table(name="bank_account")
 public class BankAccount implements Serializable {
 
@@ -38,9 +44,12 @@ public class BankAccount implements Serializable {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User userId;
 
-    @OneToMany(mappedBy = "bankAccount")
-    private List<Card> cards;
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Credit> creditList;
 
     @OneToMany(mappedBy = "bankAccount")
-    private List<Deposit> deposits;
+    private List<Card> cardList;
+
+    @OneToMany(mappedBy = "bankAccount")
+    private List<Deposit> depositList;
 }
