@@ -46,4 +46,5 @@ public class Card {
         this.status = status;
         this.balance = balance;
     }
+
 }

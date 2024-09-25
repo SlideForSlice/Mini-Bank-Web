@@ -3,7 +3,10 @@ package com.java.bank.services;
 
 import com.java.bank.models.BankAccount;
 import com.java.bank.models.Card;
+import com.java.bank.models.enums.CardStatus;
+import com.java.bank.repositories.BankAccountRepository;
 import com.java.bank.repositories.CardRepository;
+import com.java.bank.utils.CardNumberGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,9 +43,23 @@ public class CardService {
     }
 
     @Transactional
-    public void createCard(Card card) {
+    public void createCard(BankAccount bankAccount) {
         log.info("Create Card");
+
+        Card card = new Card();
+
+        String cardNumber;
+        do {
+            cardNumber = CardNumberGenerator.generateCardNumber();
+        } while (cardRepository.findByCardNumber(cardNumber).isPresent());
+
+        cardRepository.findById(card.getId()).get().setCardNumber(cardNumber);
+        cardRepository.findById(card.getId()).get().setBankAccount(bankAccount);
+        cardRepository.findById(card.getId()).get().setBalance(0);
+        cardRepository.findById(card.getId()).get().setStatus(CardStatus.ACTIVE);
+
         cardRepository.save(card);
+
     }
 
     @Transactional
@@ -92,6 +109,8 @@ public class CardService {
         log.info("New current balance: " + newBalance);
         log.info("New reciever balance: " + newRecieverBalance);
     }
+
+
 
 
 
