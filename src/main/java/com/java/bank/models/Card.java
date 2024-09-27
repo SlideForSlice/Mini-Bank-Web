@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -29,7 +30,7 @@ public class Card {
     private float balance;
 
     @Column(name = "open_date")
-    private LocalDate openDate;
+    private LocalDateTime openDate;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
@@ -40,9 +41,8 @@ public class Card {
     private BankAccount bankAccount;
 
 
-    public Card(String cardNumber, LocalDate openDate, CardStatus status, float balance) {
+    public Card(String cardNumber, CardStatus status, float balance) {
         this.cardNumber = cardNumber;
-        this.openDate = openDate;
         this.status = status;
         this.balance = balance;
     }

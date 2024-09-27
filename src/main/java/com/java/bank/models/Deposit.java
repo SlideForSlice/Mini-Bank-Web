@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -30,10 +31,10 @@ public class Deposit {
     private float interest;
 
     @Column(name = "open_date")
-    private LocalDate openDate;
+    private LocalDateTime openDate;
 
     @Column(name = "end_date")
-    private LocalDate endDate;
+    private LocalDateTime endDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
@@ -43,7 +44,7 @@ public class Deposit {
     @JoinColumn(name = "bank_account", referencedColumnName = "id")
     private BankAccount bankAccount;
 
-    public Deposit(String depositNum, float balance, float interest, LocalDate endDate, DepositStatus status) {
+    public Deposit(String depositNum, float balance, float interest, LocalDateTime endDate, DepositStatus status) {
         this.depositNum = depositNum;
         this.balance = balance;
         this.interest = interest;

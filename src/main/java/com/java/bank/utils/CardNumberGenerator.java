@@ -1,7 +1,10 @@
 package com.java.bank.utils;
+import org.springframework.stereotype.Component;
+
 import java.util.Random;
 
 
+@Component
 public class CardNumberGenerator {
 
     public static String generateCardNumber() {
