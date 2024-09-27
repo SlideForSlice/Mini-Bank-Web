@@ -1,6 +1,7 @@
 package com.java.bank.services;
 
 import com.java.bank.models.BankAccount;
+import com.java.bank.models.Card;
 import com.java.bank.models.Credit;
 import com.java.bank.models.Deposit;
 import com.java.bank.repositories.CardRepository;
@@ -29,6 +30,7 @@ public class CreditService {
         log.info("getAllCredits");
         return creditRepository.findAll();
     }
+
 
     public Optional<Credit> getCreditById(int id) {
         log.info("getCreditById" + id);
