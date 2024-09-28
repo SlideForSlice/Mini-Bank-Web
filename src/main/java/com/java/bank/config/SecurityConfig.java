@@ -2,6 +2,7 @@ package com.java.bank.config;
 
 import com.java.bank.services.UserDetailService;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -24,6 +26,7 @@ public class SecurityConfig {
     private final UserDetailService userDetailService;
     private final JWTFilter jwtFilter;
 
+    @Autowired
     public SecurityConfig(UserDetailService userDetailService, JWTFilter jwtFilter) {
         this.userDetailService = userDetailService;
         this.jwtFilter = jwtFilter;
@@ -34,12 +37,12 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeRequests(authorize -> authorize
-                        .requestMatchers("/auth/login", "auth/registration", "/error").permitAll()
-                        .anyRequest().hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/auth/login", "auth/registration", "auth/registration/details", "/error").permitAll()
+                        .anyRequest().hasAnyRole("USER")
                 )
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .loginProcessingUrl("/auth/login")
+                .formLogin(formLogin -> formLogin
+                        .loginPage("/auth/login")
+                        .loginProcessingUrl("/auth/proc_login")
                         .defaultSuccessUrl("/index", true)
                         .failureUrl("/auth/login?error")
                 )
@@ -65,6 +68,7 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+
     }
 
     @Bean

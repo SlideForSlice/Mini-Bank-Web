@@ -2,7 +2,6 @@ package com.java.bank.controllers;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.java.bank.DTO.BankAccountDTO;
-import com.java.bank.DTO.RegDTO;
 import com.java.bank.DTO.UserDTO;
 import com.java.bank.models.BankAccount;
 import com.java.bank.models.User;
@@ -14,7 +13,6 @@ import com.java.bank.utils.UserErrorResponse;
 import com.java.bank.utils.UserValidator;
 import jakarta.validation.Valid;
 import jakarta.validation.ValidationException;
-import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,13 +20,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
-import javax.naming.AuthenticationException;
 import java.util.List;
 import java.util.Map;
 
@@ -70,9 +65,7 @@ public class AuthController {
     }
 
     @PostMapping("/registration")
-    public String performRegistration(@RequestBody RegDTO regDTO,
-                                          @Valid UserDTO userDTO,
-                                              @Valid BankAccountDTO userAccountDTO,
+    public Map<String, String> performRegistrationUserCreds(@RequestBody @Valid UserDTO userDTO,
                                               BindingResult bindingResult) {
         User user = convertToUser(userDTO);
         userValidator.validate(user, bindingResult);
@@ -82,9 +75,17 @@ public class AuthController {
             for (FieldError fieldError : fieldErrors) {
                 errors.append(fieldError.getField()).append(" : ").append(fieldError.getDefaultMessage()).append("\n");
             }
-            throw new ValidationException(errors.toString());
+            throw new JWTVerificationException(errors.toString());
         }
-        BankAccount bankAccount = convertToBankAccount(userAccountDTO);
+        registrationService.register(user);
+        String token = jwtUtil.generateToken(user.getUsername());
+        return Map.of("token", token);
+    }
+
+    @PostMapping("/registration/details")
+    public String performRegistrationBankAccDetails(@RequestBody @Valid BankAccountDTO bankAccountDTO,
+                                                    BindingResult bindingResult) {
+        BankAccount bankAccount = convertToBankAccount(bankAccountDTO);
         bankAccountValidator.validate(bankAccount, bindingResult);
         if (bindingResult.hasErrors()) {
             StringBuilder errors = new StringBuilder();
@@ -92,25 +93,24 @@ public class AuthController {
             for (FieldError fieldError : fieldErrors) {
                 errors.append(fieldError.getField()).append(" : ").append(fieldError.getDefaultMessage()).append("\n");
             }
-            throw new ValidationException(errors.toString());
+            throw new JWTVerificationException(errors.toString());
         }
-        registrationService.register(user);
-        bankAccountService.saveBankAccount(bankAccount);
-        jwtUtil.generateToken(user.getUsername());
+            bankAccountService.saveBankAccount(bankAccount);
         return HttpStatus.CREATED.toString();
     }
 
+
     @PostMapping("/login")
-    public String performLogin(@RequestBody @Valid UserDTO userDTO){
+    public Map<String, String> performLogin(@RequestBody UserDTO userDTO){
         UsernamePasswordAuthenticationToken authToken =
                 new UsernamePasswordAuthenticationToken(userDTO.getUsername(), userDTO.getPassword());
         try {
             authenticationManager.authenticate(authToken);
         } catch (BadCredentialsException e) {
-            return HttpStatus.UNAUTHORIZED.toString();
+            return Map.of("error", "incorrect username or password");
         }
-        jwtUtil.generateToken(userDTO.getUsername());
-        return HttpStatus.OK.toString();
+        String token = jwtUtil.generateToken(userDTO.getUsername());
+        return Map.of("token", token);
     }
 
     @ExceptionHandler
@@ -128,5 +128,6 @@ public class AuthController {
     public BankAccount convertToBankAccount(BankAccountDTO bankAccountDTO) {
         return this.modelMapper.map(bankAccountDTO, BankAccount.class);
     }
+
 
 }
