@@ -1,10 +1,12 @@
 package com.java.bank.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Cascade;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -26,9 +28,10 @@ public class BankAccount implements Serializable {
     private String fullName;
 
     @Column(name="passport_number")
-    private int passportNumber;
+    private String passportNumber;
 
     @Column(name="date_of_birth")
+    @DateTimeFormat
     private LocalDate dateOfBirth;
 
     @Column(name="address")
@@ -38,18 +41,19 @@ public class BankAccount implements Serializable {
     private String phoneNumber;
 
     @Column(name="email")
+    @Email
     private String email;
 
     @OneToOne()
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User userId;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "bankAccount", fetch = FetchType.LAZY)
     private List<Credit> creditList;
 
-    @OneToMany(mappedBy = "bankAccount")
+    @OneToMany(mappedBy = "bankAccount", fetch = FetchType.LAZY)
     private List<Card> cardList;
 
-    @OneToMany(mappedBy = "bankAccount")
+    @OneToMany(mappedBy = "bankAccount", fetch = FetchType.LAZY)
     private List<Deposit> depositList;
 }

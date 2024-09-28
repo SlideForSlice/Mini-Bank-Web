@@ -17,9 +17,9 @@ public class CardController {
     private final CardService cardService;
 
     @GetMapping()
-    public Optional<Card> getAllCards(BankAccount idBankAccount) {
-        return cardService.getAllCardsByBankAccount(idBankAccount);
-        //TODO Добавить ссылку на страницу
+    public String getAllCards(BankAccount idBankAccount) {
+        cardService.getAllCardsByBankAccount(idBankAccount);
+        return "/card-service/index";
     }
 
     @PostMapping("/create-card/{idBankAccount}")
@@ -40,6 +40,11 @@ public class CardController {
     @PutMapping("/cash-out/{cardId}")
     public void cashOut(@PathVariable int cardId, float amount) {
         cardService.cashOut(cardId, amount);
+    }
+
+    @GetMapping("/send/{cardId}")
+    public String showForm(@PathVariable int cardId) {
+        return "/card-service/send";
     }
 
     @PutMapping("/send/{cardId}")

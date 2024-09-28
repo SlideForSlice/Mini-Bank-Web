@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -34,16 +35,16 @@ public class Credit {
     private float interestRate;
 
     @Column(name="open_date")
-    private LocalDate openDate;
+    private LocalDateTime openDate;
 
     @Column(name="end_date")
-    private LocalDate endDate;
+    private LocalDateTime endDate;
 
     @Column(name="status")
     private CreditStatus credit_status;
 
 
-    public Credit(String creditNumber, float loanDebt, float interestRate, CreditStatus credit_status, LocalDate endDate) {
+    public Credit(String creditNumber, float loanDebt, float interestRate, CreditStatus credit_status, LocalDateTime endDate) {
         this.creditNumber = creditNumber;
         this.loanDebt = loanDebt;
         this.interestRate = interestRate;
