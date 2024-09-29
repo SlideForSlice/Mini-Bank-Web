@@ -1,5 +1,6 @@
 package com.java.bank.security;
 
+import com.java.bank.models.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.stereotype.Component;
@@ -20,11 +21,12 @@ public class JWTUtil {
     @Value("${spring.jwt.secret}")
     private String secret;
 
-    public String generateToken(String username) {
-        Date expirationDate = Date.from(ZonedDateTime.now().plusMinutes(60).toInstant());
+    public String generateToken(String username, int id) {
+        Date expirationDate = Date.from(ZonedDateTime.now().plusMinutes(600000).toInstant());
         return JWT.create()
                 .withSubject("User details")
                 .withClaim("username", username)
+                .withClaim("id", id)
                 .withIssuedAt(new Date())
                 .withIssuer("admin")
                 .withExpiresAt(expirationDate)
@@ -33,7 +35,7 @@ public class JWTUtil {
 
     public String verifyToken(String token) throws JWTVerificationException {
         JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secret))
-                .withSubject("User detail")
+                .withSubject("User details")
                 .withIssuer("admin")
                 .build();
 
@@ -42,4 +44,21 @@ public class JWTUtil {
 
     }
 
+    public int extractUserId(String token) {
+
+        try {
+            JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secret))
+                    .withSubject("User details")
+                    .withIssuer("admin")
+                    .build();
+
+            DecodedJWT jwt = verifier.verify(token);
+            return jwt.getClaim("id").asInt();
+        } catch (JWTVerificationException e) {
+            // Логирование или обработка ошибки верификации
+            throw new IllegalArgumentException("Invalid token", e);
+        }
+    }
+
 }
+

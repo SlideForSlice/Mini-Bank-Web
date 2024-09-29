@@ -5,7 +5,6 @@ import jakarta.validation.constraints.Email;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Cascade;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
