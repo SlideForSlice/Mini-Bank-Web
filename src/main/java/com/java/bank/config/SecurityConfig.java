@@ -36,9 +36,11 @@ public class SecurityConfig {
     protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
-                .authorizeRequests(authorize -> authorize
-                        .requestMatchers("/auth/login", "auth/registration", "auth/registration/details", "/error").permitAll()
-                        .anyRequest().hasAnyRole("USER")
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/auth/login", "auth/registration", "auth/registration/details",
+                                "/error").permitAll()
+                        .requestMatchers("/bank-account-service/**").hasAnyRole("USER")
+                        .anyRequest().authenticated()
                 )
                 .formLogin(formLogin -> formLogin
                         .loginPage("/auth/login")
@@ -60,7 +62,8 @@ public class SecurityConfig {
 
     @Bean
     protected AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+        AuthenticationManagerBuilder authenticationManagerBuilder = http.
+                getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.userDetailsService(userDetailService).passwordEncoder(passwordEncoder());
         return authenticationManagerBuilder.build();
     }

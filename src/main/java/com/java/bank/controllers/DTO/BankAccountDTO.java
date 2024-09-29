@@ -1,4 +1,4 @@
-package com.java.bank.DTO;
+package com.java.bank.controllers.DTO;
 
 import com.java.bank.models.Card;
 import com.java.bank.models.Credit;
@@ -12,8 +12,6 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
@@ -21,8 +19,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-@Getter
-@Setter
 public class BankAccountDTO {
 
     @NotNull(message = "Full name should not be empty!")

@@ -1,14 +1,15 @@
 package com.java.bank.models;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
+@Accessors(chain = true)
 @Table(name="user_cred")
 public class User {
 
@@ -22,5 +23,8 @@ public class User {
 
     @Column(name="password")
     private String password;
+
+    @Column(name = "role")
+    private String role;
 
 }

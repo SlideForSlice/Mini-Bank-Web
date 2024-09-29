@@ -1,11 +1,12 @@
 package com.java.bank.services;
 
 import com.java.bank.models.BankAccount;
-import com.java.bank.models.Card;
 import com.java.bank.models.Credit;
-import com.java.bank.models.Deposit;
-import com.java.bank.repositories.CardRepository;
-import com.java.bank.repositories.CreditRepository;
+import com.java.bank.DAO.CardRepository;
+import com.java.bank.DAO.CreditRepository;
+import com.java.bank.models.enums.CardStatus;
+import com.java.bank.models.enums.CreditStatus;
+import com.java.bank.utils.NumberGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,16 +39,25 @@ public class CreditService {
     }
 
     @Transactional
-    public Credit createCredit(Credit credit) {
-        log.info("createCredit");
-        return creditRepository.save(credit);
+    public void  createCredit(BankAccount bankAccount, int amount) {
+
+        Credit credit = new Credit();
+
+        String creditNumber;
+        do {
+            creditNumber = NumberGenerator.generateNumber();
+        } while (creditRepository.findByCreditNumber(creditNumber).isPresent());
+
+        creditRepository.findById(credit.getId()).get().setCreditNumber(creditNumber);
+        creditRepository.findById(credit.getId()).get().setBankAccount(bankAccount);
+        creditRepository.findById(credit.getId()).get().setLoanDebt(amount);
+        creditRepository.findById(credit.getId()).get().setCreditStatus(CreditStatus.ACTIVE);
+
+        log.info("Create Credit");
+
+        creditRepository.save(credit);
     }
 
-    @Transactional
-    public Credit updateCredit(int id, Credit credit) {
-        log.info("updateCredit" + id);
-        return creditRepository.save(credit);
-    }
 
     @Transactional
     public void deleteCredit(int id) {

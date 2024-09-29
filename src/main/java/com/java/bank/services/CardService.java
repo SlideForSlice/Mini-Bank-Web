@@ -4,14 +4,14 @@ package com.java.bank.services;
 import com.java.bank.models.BankAccount;
 import com.java.bank.models.Card;
 import com.java.bank.models.enums.CardStatus;
-import com.java.bank.repositories.BankAccountRepository;
-import com.java.bank.repositories.CardRepository;
-import com.java.bank.utils.CardNumberGenerator;
+import com.java.bank.DAO.CardRepository;
+import com.java.bank.utils.NumberGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,13 +44,12 @@ public class CardService {
 
     @Transactional
     public void createCard(BankAccount bankAccount) {
-        log.info("Create Card");
 
         Card card = new Card();
 
         String cardNumber;
         do {
-            cardNumber = CardNumberGenerator.generateCardNumber();
+            cardNumber = NumberGenerator.generateNumber();
         } while (cardRepository.findByCardNumber(cardNumber).isPresent());
 
         cardRepository.findById(card.getId()).get().setCardNumber(cardNumber);
@@ -58,14 +57,10 @@ public class CardService {
         cardRepository.findById(card.getId()).get().setBalance(0);
         cardRepository.findById(card.getId()).get().setStatus(CardStatus.ACTIVE);
 
+        log.info("Create Card");
+
         cardRepository.save(card);
 
-    }
-
-    @Transactional
-    public void updateCard(Card card) {
-        log.info("Update Card");
-        cardRepository.save(card);
     }
 
     @Transactional

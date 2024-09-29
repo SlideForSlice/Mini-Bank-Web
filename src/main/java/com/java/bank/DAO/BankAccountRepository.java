@@ -1,4 +1,4 @@
-package com.java.bank.repositories;
+package com.java.bank.DAO;
 
 import com.java.bank.models.BankAccount;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,5 +14,4 @@ public interface BankAccountRepository extends JpaRepository<BankAccount, Intege
     Optional<BankAccount> findByPassportNumber(String passportNumber);
     Optional<BankAccount> findByPhoneNumber(String phoneNumber);
     Optional<BankAccount> findByEmail(String email);
-
 }

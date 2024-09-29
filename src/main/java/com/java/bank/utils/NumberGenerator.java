@@ -5,9 +5,9 @@ import java.util.Random;
 
 
 @Component
-public class CardNumberGenerator {
+public class NumberGenerator {
 
-    public static String generateCardNumber() {
+    public static String generateNumber() {
         Random random = new Random();
         StringBuilder cardNumber = new StringBuilder();
 
