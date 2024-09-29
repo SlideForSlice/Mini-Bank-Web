@@ -10,7 +10,10 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
@@ -18,24 +21,27 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
+@Getter
+@Setter
 public class BankAccountDTO {
 
-    @NotEmpty(message = "Full name should not be empty!")
+    @NotNull(message = "Full name should not be empty!")
     private String fullName;
-    @NotEmpty(message = "Passport number should not be empty!")
+
+    @NotNull(message = "Passport number should not be empty!")
     private String passportNumber;
 
-    @NotEmpty(message = "DOB should not be empty!")
+    @NotNull(message = "DOB should not be empty!")
     private LocalDate dateOfBirth;
 
-    @NotEmpty(message = "Address should not be empty!")
+    @NotNull(message = "Address should not be empty!")
     private String address;
 
-    @NotEmpty(message = "Phone number should not be empty!")
+    @NotNull(message = "Phone number should not be empty!")
     private String phoneNumber;
 
     @Email(message = "Email is not valid")
-    @NotEmpty(message = "Email should not be empty!")
+    @NotNull(message = "Email should not be empty!")
     private String email;
 
     private User userId;

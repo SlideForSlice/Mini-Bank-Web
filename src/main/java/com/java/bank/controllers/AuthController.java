@@ -5,6 +5,7 @@ import com.java.bank.DTO.BankAccountDTO;
 import com.java.bank.DTO.UserDTO;
 import com.java.bank.models.BankAccount;
 import com.java.bank.models.User;
+import com.java.bank.repositories.UserRepository;
 import com.java.bank.security.JWTUtil;
 import com.java.bank.services.BankAccountService;
 import com.java.bank.services.RegistrationService;
@@ -12,7 +13,6 @@ import com.java.bank.utils.BankAccountValidator;
 import com.java.bank.utils.UserErrorResponse;
 import com.java.bank.utils.UserValidator;
 import jakarta.validation.Valid;
-import jakarta.validation.ValidationException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
@@ -38,12 +39,13 @@ public class AuthController {
     private final BankAccountValidator bankAccountValidator;
     private final ModelMapper modelMapper;
     private final BankAccountService bankAccountService;
+    private final UserRepository userRepository;
 
     @Autowired
     public AuthController(RegistrationService registrationService, JWTUtil jwtUtil,
                           AuthenticationManager authenticationManager, UserValidator userValidator,
                           BankAccountValidator bankAccountValidator, ModelMapper modelMapper,
-                          BankAccountService bankAccountService) {
+                          BankAccountService bankAccountService, UserRepository userRepository) {
         this.registrationService = registrationService;
         this.jwtUtil = jwtUtil;
         this.authenticationManager = authenticationManager;
@@ -51,6 +53,7 @@ public class AuthController {
         this.bankAccountValidator = bankAccountValidator;
         this.modelMapper = modelMapper;
         this.bankAccountService = bankAccountService;
+        this.userRepository = userRepository;
     }
 
     @GetMapping("/login")
@@ -78,24 +81,41 @@ public class AuthController {
             throw new JWTVerificationException(errors.toString());
         }
         registrationService.register(user);
-        String token = jwtUtil.generateToken(user.getUsername());
+        String token = jwtUtil.generateToken(user.getUsername(), user.getId());
         return Map.of("token", token);
     }
 
     @PostMapping("/registration/details")
     public String performRegistrationBankAccDetails(@RequestBody @Valid BankAccountDTO bankAccountDTO,
-                                                    BindingResult bindingResult) {
+                                                    BindingResult bindingResult,
+                                                    @RequestHeader("Authorization") String token) {
+
+        if (token == null || token.isEmpty()) {
+            throw new IllegalArgumentException("Token is not provided");
+        }
+
+        String jwtToken = token.replace("Bearer ", "");
+        System.out.println("Received Token: " + jwtToken);
+        int id = jwtUtil.extractUserId(jwtToken);
+        System.out.println("Extracted User ID: " + id);
+
+
+        User user = userRepository.findById(id);
+        if (user == null) {
+            throw new IllegalArgumentException("User not found");
+        }
+
         BankAccount bankAccount = convertToBankAccount(bankAccountDTO);
+        bankAccount.setUserId(user);
         bankAccountValidator.validate(bankAccount, bindingResult);
         if (bindingResult.hasErrors()) {
             StringBuilder errors = new StringBuilder();
-            List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-            for (FieldError fieldError : fieldErrors) {
+            for (FieldError fieldError : bindingResult.getFieldErrors()) {
                 errors.append(fieldError.getField()).append(" : ").append(fieldError.getDefaultMessage()).append("\n");
             }
             throw new JWTVerificationException(errors.toString());
         }
-            bankAccountService.saveBankAccount(bankAccount);
+        bankAccountService.saveBankAccount(bankAccount);
         return HttpStatus.CREATED.toString();
     }
 
@@ -109,7 +129,7 @@ public class AuthController {
         } catch (BadCredentialsException e) {
             return Map.of("error", "incorrect username or password");
         }
-        String token = jwtUtil.generateToken(userDTO.getUsername());
+        String token = jwtUtil.generateToken(userDTO.getUsername(), userDTO.getId());
         return Map.of("token", token);
     }
 
