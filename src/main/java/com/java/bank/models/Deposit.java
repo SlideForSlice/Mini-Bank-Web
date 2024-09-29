@@ -2,16 +2,14 @@ package com.java.bank.models;
 
 import com.java.bank.models.enums.DepositStatus;
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @Table(name = "deposit")
 public class Deposit {

@@ -1,4 +1,4 @@
-package com.java.bank.repositories;
+package com.java.bank.DAO;
 
 import com.java.bank.models.BankAccount;
 import com.java.bank.models.Card;
@@ -11,5 +11,7 @@ import java.util.Optional;
 @Repository
 public interface CreditRepository extends JpaRepository<Credit, Integer> {
     List<Credit> findByBankAccount(BankAccount bankAccount);
+    Optional<Credit> findByCreditNumber(String creditNumber);
+
 
 }

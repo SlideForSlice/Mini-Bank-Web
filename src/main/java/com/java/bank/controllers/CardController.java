@@ -1,7 +1,9 @@
 package com.java.bank.controllers;
 
+import com.java.bank.controllers.DTO.BankAccountDTO;
 import com.java.bank.models.BankAccount;
 import com.java.bank.models.Card;
+import com.java.bank.services.BankAccountService;
 import com.java.bank.services.CardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.parameters.P;
@@ -11,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RequestMapping("/card-service")
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class CardController {
     private final CardService cardService;
@@ -22,9 +24,9 @@ public class CardController {
         return "/card-service/index";
     }
 
-    @PostMapping("/create-card/{idBankAccount}")
-    public void createCard(@PathVariable BankAccount idBankAccount) {
-        cardService.createCard(idBankAccount);
+    @PostMapping("/create-card")
+    public void createCard(@RequestBody BankAccount bankAccount) {
+        cardService.createCard(bankAccount);
     }
 
     @DeleteMapping("/delete-card/{cardId}")
@@ -32,13 +34,13 @@ public class CardController {
         cardService.deleteCard(cardId);
     }
 
-    @PutMapping("/cash-in/{cardId}")
-    public void cashIn(@PathVariable int cardId, float amount) {
+    @PutMapping("/cash-in")
+    public void cashIn(@RequestBody int cardId, float amount) {
         cardService.cashIn(cardId, amount);
     }
 
-    @PutMapping("/cash-out/{cardId}")
-    public void cashOut(@PathVariable int cardId, float amount) {
+    @PutMapping("/cash-out")
+    public void cashOut(@RequestBody int cardId, float amount) {
         cardService.cashOut(cardId, amount);
     }
 
@@ -47,8 +49,8 @@ public class CardController {
         return "/card-service/send";
     }
 
-    @PutMapping("/send/{cardId}")
-    public void send(@PathVariable int cardId, float amount, String recieverCardNum) {
+    @PutMapping("/send")
+    public void send(@RequestBody int cardId, float amount, String recieverCardNum) {
         cardService.sendMoneyOnOtherCard(cardId, amount, recieverCardNum);
     }
 

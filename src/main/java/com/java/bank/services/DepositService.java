@@ -1,10 +1,11 @@
 package com.java.bank.services;
 
 import com.java.bank.models.BankAccount;
-import com.java.bank.models.Card;
 import com.java.bank.models.Deposit;
-import com.java.bank.repositories.CardRepository;
-import com.java.bank.repositories.DepositRepository;
+import com.java.bank.DAO.CardRepository;
+import com.java.bank.DAO.DepositRepository;
+import com.java.bank.models.enums.DepositStatus;
+import com.java.bank.utils.NumberGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ public class DepositService {
         this.cardService = cardService;
     }
 
-    public List<Deposit> getAllDeposits() {
+    public List<Deposit> getAllDeposits(BankAccount bankAccount) {
         log.info("getAllDeposits");
         return depositRepository.findAll();
     }
@@ -40,17 +41,29 @@ public class DepositService {
     }
 
     @Transactional
-    public Deposit createDeposit(Deposit deposit) {
-        return depositRepository.save(deposit);
+    public void createDeposit(BankAccount bankAccount) {
+
+        Deposit deposit = new Deposit();
+
+        String depositNumber;
+        do {
+            depositNumber = NumberGenerator.generateNumber();
+        } while (depositRepository.findByDepositNum(depositNumber).isEmpty());
+
+        depositRepository.findById(deposit.getId()).get().setDepositNum(depositNumber);
+        depositRepository.findById(deposit.getId()).get().setBankAccount(bankAccount);
+        depositRepository.findById(deposit.getId()).get().setBalance(0);
+        depositRepository.findById(deposit.getId()).get().setStatus(DepositStatus.ACTIVE);
+
+        log.info("Create Deposit");
+
+        depositRepository.save(deposit);
     }
 
-    @Transactional
-    public Deposit updateDeposit(int id, Deposit deposit) {
-        return depositRepository.save(deposit);
-    }
 
     @Transactional
     public void deleteDeposit(int id) {
+
         depositRepository.deleteById(id);
     }
 

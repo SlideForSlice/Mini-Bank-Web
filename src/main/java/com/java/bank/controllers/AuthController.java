@@ -1,11 +1,11 @@
 package com.java.bank.controllers;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.java.bank.DTO.BankAccountDTO;
-import com.java.bank.DTO.UserDTO;
+import com.java.bank.controllers.DTO.BankAccountDTO;
+import com.java.bank.controllers.DTO.UserDTO;
 import com.java.bank.models.BankAccount;
 import com.java.bank.models.User;
-import com.java.bank.repositories.UserRepository;
+import com.java.bank.DAO.UserRepository;
 import com.java.bank.security.JWTUtil;
 import com.java.bank.services.BankAccountService;
 import com.java.bank.services.RegistrationService;
@@ -13,6 +13,7 @@ import com.java.bank.utils.BankAccountValidator;
 import com.java.bank.utils.UserErrorResponse;
 import com.java.bank.utils.UserValidator;
 import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -115,7 +116,7 @@ public class AuthController {
             }
             throw new JWTVerificationException(errors.toString());
         }
-        bankAccountService.saveBankAccount(bankAccount);
+        bankAccountService.createBankAccount(bankAccount);
         return HttpStatus.CREATED.toString();
     }
 

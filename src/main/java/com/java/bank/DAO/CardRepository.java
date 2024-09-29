@@ -1,4 +1,4 @@
-package com.java.bank.repositories;
+package com.java.bank.DAO;
 
 import com.java.bank.models.BankAccount;
 import com.java.bank.models.Card;
