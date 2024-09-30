@@ -1,9 +1,9 @@
 package com.java.bank.services;
 
 
+import com.java.bank.DAO.BankAccountRepository;
 import com.java.bank.models.BankAccount;
 import com.java.bank.models.Card;
-import com.java.bank.models.enums.CardStatus;
 import com.java.bank.DAO.CardRepository;
 import com.java.bank.utils.NumberGenerator;
 import lombok.extern.slf4j.Slf4j;
@@ -11,8 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -21,10 +22,12 @@ import java.util.Optional;
 public class CardService {
 
     private final CardRepository cardRepository;
+    private final BankAccountRepository bankAccountRepository;
 
     @Autowired
-    public CardService(CardRepository cardRepository) {
+    public CardService(CardRepository cardRepository, BankAccountRepository bankAccountRepository) {
         this.cardRepository = cardRepository;
+        this.bankAccountRepository = bankAccountRepository;
     }
 
     public Optional<Card> getById(int id) {
@@ -42,8 +45,9 @@ public class CardService {
         return cardRepository.findByBankAccount(bankAccount);
     }
 
+
     @Transactional
-    public void createCard(BankAccount bankAccount) {
+    public void createCard(int idBankAccount) {
 
         Card card = new Card();
 
@@ -52,10 +56,11 @@ public class CardService {
             cardNumber = NumberGenerator.generateNumber();
         } while (cardRepository.findByCardNumber(cardNumber).isPresent());
 
-        cardRepository.findById(card.getId()).get().setCardNumber(cardNumber);
-        cardRepository.findById(card.getId()).get().setBankAccount(bankAccount);
-        cardRepository.findById(card.getId()).get().setBalance(0);
-        cardRepository.findById(card.getId()).get().setStatus(CardStatus.ACTIVE);
+        card.setCardNumber(cardNumber);
+        card.setBankAccount(bankAccountRepository.findById(idBankAccount).get());
+        card.setBalance(0);
+        card.setOpenDate(LocalDateTime.now());
+        card.setStatus("goi");
 
         log.info("Create Card");
 
@@ -79,6 +84,7 @@ public class CardService {
         log.info("New balance: " + newBalance);
     }
 
+    // TODO Сделать проверку на Позитивный баланс
     @Transactional
     public void cashOut(int id, float amount) {
         log.info("Cash Out card (" + id + ") on amount " + amount);
@@ -89,29 +95,28 @@ public class CardService {
         log.info("New balance: " + newBalance);
     }
 
+    // TODO провекра на негативный баланс
     @Transactional
     public void sendMoneyOnOtherCard(int currentId, float amount, String recieverCardNum) {
-        log.info("Send Money from ("+  currentId + ") on other card (" + recieverCardNum + ") an amount " + amount);
-        float currentBalance = cardRepository.findById(currentId).get().getBalance();
-        float newBalance = currentBalance - amount;
-        cardRepository.findById(currentId).get().setBalance(newBalance);
-        cardRepository.save(cardRepository.findById(currentId).get());
+        cashOut(currentId, amount);
+        int pukJopa = cardRepository.findByCardNumber(recieverCardNum).get().getId();
+        cashIn(pukJopa, amount);
 
-        float recieverBalance = cardRepository.findByCardNumber(recieverCardNum).get().getBalance();
-        float newRecieverBalance = recieverBalance + amount;
-        cardRepository.findByCardNumber(recieverCardNum).get().setBalance(newRecieverBalance);
-        cardRepository.save(cardRepository.findByCardNumber(recieverCardNum).get());
-        log.info("New current balance: " + newBalance);
-        log.info("New reciever balance: " + newRecieverBalance);
+
+
+//        log.info("Send Money from (" + currentId + ") on other card (" + recieverCardNum + ") an amount " + amount);
+//        float currentBalance = cardRepository.findById(currentId).get().getBalance();
+//        float newBalance = currentBalance - amount;
+//        cardRepository.findById(currentId).get().setBalance(newBalance);
+//
+//        float recieverBalance = cardRepository.findByCardNumber(recieverCardNum).get().getBalance();
+//        float newRecieverBalance = recieverBalance + amount;
+//        cardRepository.findByCardNumber(recieverCardNum).get().setBalance(newRecieverBalance);
+//
+//        cardRepository.save(cardRepository.findById(currentId).get());
+//        cardRepository.save(cardRepository.findByCardNumber(recieverCardNum).get());
+//        log.info("New current balance: " + newBalance);
+//        log.info("New reciever balance: " + newRecieverBalance);
     }
-
-
-
-
-
-
-
-
-
-
 }
+

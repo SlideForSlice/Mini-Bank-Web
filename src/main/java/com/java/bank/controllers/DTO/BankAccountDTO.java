@@ -21,6 +21,7 @@ import java.util.List;
 @Data
 public class BankAccountDTO {
 
+
     @NotNull(message = "Full name should not be empty!")
     private String fullName;
 

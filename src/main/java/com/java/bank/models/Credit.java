@@ -1,5 +1,6 @@
 package com.java.bank.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.java.bank.models.enums.CreditStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -22,6 +23,7 @@ public class Credit {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bank_account", referencedColumnName = "id")
+    @JsonBackReference
     private BankAccount bankAccount;
 
     @Column(name="credit_num")

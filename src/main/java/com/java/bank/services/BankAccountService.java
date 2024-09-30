@@ -1,17 +1,16 @@
 package com.java.bank.services;
 
+import com.java.bank.DAO.CardRepository;
 import com.java.bank.DAO.UserRepository;
 import com.java.bank.models.BankAccount;
 import com.java.bank.DAO.BankAccountRepository;
-import com.java.bank.models.User;
-import jakarta.validation.constraints.Null;
+import com.java.bank.models.Card;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,11 +20,13 @@ public class BankAccountService {
 
     private final BankAccountRepository bankAccountRepository;
     private final UserRepository userRepository;
+    private final CardRepository cardRepository;
 
     @Autowired
-    public BankAccountService(BankAccountRepository bankAccountRepository, UserRepository userRepository) {
+    public BankAccountService(BankAccountRepository bankAccountRepository, UserRepository userRepository, CardRepository cardRepository) {
         this.bankAccountRepository = bankAccountRepository;
         this.userRepository = userRepository;
+        this.cardRepository = cardRepository;
     }
 
 
@@ -77,6 +78,10 @@ public class BankAccountService {
     public void deleteBankAccount(int  id) {
 
         bankAccountRepository.deleteById(id);
+    }
+
+    public List<Card> getAllCards(int id) {
+        return cardRepository.findAllByBankAccount(bankAccountRepository.findById(id).get());
     }
 
 

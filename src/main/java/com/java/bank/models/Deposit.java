@@ -1,5 +1,6 @@
 package com.java.bank.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.java.bank.models.enums.DepositStatus;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -40,6 +41,7 @@ public class Deposit {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bank_account", referencedColumnName = "id")
+    @JsonBackReference
     private BankAccount bankAccount;
 
     public Deposit(String depositNum, float balance, float interest, LocalDateTime endDate, DepositStatus status) {

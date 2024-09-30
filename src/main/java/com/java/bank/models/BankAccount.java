@@ -1,5 +1,6 @@
 package com.java.bank.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.Getter;
@@ -48,11 +49,14 @@ public class BankAccount implements Serializable {
     private User userId;
 
     @OneToMany(mappedBy = "bankAccount", fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Credit> creditList;
 
     @OneToMany(mappedBy = "bankAccount", fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Card> cardList;
 
     @OneToMany(mappedBy = "bankAccount", fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Deposit> depositList;
 }

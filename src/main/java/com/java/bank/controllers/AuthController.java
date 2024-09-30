@@ -10,6 +10,7 @@ import com.java.bank.security.JWTUtil;
 import com.java.bank.services.BankAccountService;
 import com.java.bank.services.RegistrationService;
 import com.java.bank.utils.BankAccountValidator;
+import com.java.bank.utils.MapperForDTO;
 import com.java.bank.utils.UserErrorResponse;
 import com.java.bank.utils.UserValidator;
 import jakarta.validation.Valid;
@@ -38,21 +39,21 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final UserValidator userValidator;
     private final BankAccountValidator bankAccountValidator;
-    private final ModelMapper modelMapper;
+    private final MapperForDTO mapper;
     private final BankAccountService bankAccountService;
     private final UserRepository userRepository;
 
     @Autowired
     public AuthController(RegistrationService registrationService, JWTUtil jwtUtil,
                           AuthenticationManager authenticationManager, UserValidator userValidator,
-                          BankAccountValidator bankAccountValidator, ModelMapper modelMapper,
+                          BankAccountValidator bankAccountValidator, MapperForDTO mapper,
                           BankAccountService bankAccountService, UserRepository userRepository) {
         this.registrationService = registrationService;
         this.jwtUtil = jwtUtil;
         this.authenticationManager = authenticationManager;
         this.userValidator = userValidator;
         this.bankAccountValidator = bankAccountValidator;
-        this.modelMapper = modelMapper;
+        this.mapper = mapper;
         this.bankAccountService = bankAccountService;
         this.userRepository = userRepository;
     }
@@ -71,7 +72,7 @@ public class AuthController {
     @PostMapping("/registration")
     public Map<String, String> performRegistrationUserCreds(@RequestBody @Valid UserDTO userDTO,
                                               BindingResult bindingResult) {
-        User user = convertToUser(userDTO);
+        User user = mapper.convertToUser(userDTO);
         userValidator.validate(user, bindingResult);
         if (bindingResult.hasErrors()) {
             StringBuilder errors = new StringBuilder();
@@ -106,7 +107,7 @@ public class AuthController {
             throw new IllegalArgumentException("User not found");
         }
 
-        BankAccount bankAccount = convertToBankAccount(bankAccountDTO);
+        BankAccount bankAccount = mapper.convertToBankAccount(bankAccountDTO);
         bankAccount.setUserId(user);
         bankAccountValidator.validate(bankAccount, bindingResult);
         if (bindingResult.hasErrors()) {
@@ -143,12 +144,7 @@ public class AuthController {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    public User convertToUser(UserDTO userDTO) {
-        return this.modelMapper.map(userDTO, User.class);
-    }
-    public BankAccount convertToBankAccount(BankAccountDTO bankAccountDTO) {
-        return this.modelMapper.map(bankAccountDTO, BankAccount.class);
-    }
+
 
 
 }

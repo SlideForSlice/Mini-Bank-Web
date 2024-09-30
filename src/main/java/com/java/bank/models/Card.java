@@ -1,5 +1,6 @@
 package com.java.bank.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.java.bank.models.enums.CardStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -33,15 +34,16 @@ public class Card {
     private LocalDateTime openDate;
 
     @Column(name = "status")
-    @Enumerated(EnumType.STRING)
-    private CardStatus status;
+//    @Enumerated(EnumType.STRING)
+    private String status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bank_account", referencedColumnName = "id")
+    @JsonBackReference
     private BankAccount bankAccount;
 
 
-    public Card(String cardNumber, CardStatus status, float balance) {
+    public Card(String cardNumber, String status, float balance) {
         this.cardNumber = cardNumber;
         this.status = status;
         this.balance = balance;
