@@ -47,7 +47,7 @@ public class DepositService {
 
         String depositNumber;
         do {
-            depositNumber = NumberGenerator.generateNumber();
+            depositNumber = NumberGenerator.generateCardNumber();
         } while (depositRepository.findByDepositNum(depositNumber).isEmpty());
 
         depositRepository.findById(deposit.getId()).get().setDepositNum(depositNumber);

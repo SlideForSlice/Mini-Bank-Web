@@ -52,14 +52,14 @@ public class CardService {
 
         String cardNumber;
         do {
-            cardNumber = NumberGenerator.generateNumber();
+            cardNumber = NumberGenerator.generateCardNumber();
         } while (cardRepository.findByCardNumber(cardNumber).isPresent());
 
         card.setCardNumber(cardNumber);
         card.setBankAccount(bankAccountRepository.findById(idBankAccount).get());
         card.setBalance(0);
         card.setOpenDate(LocalDateTime.now());
-        card.setStatus("goi");
+        card.setStatus("Active");
 
         log.info("Create Card");
 

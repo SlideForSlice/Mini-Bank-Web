@@ -5,15 +5,17 @@ import com.java.bank.models.enums.CreditStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @Table(name="credit")
+@RequiredArgsConstructor
 public class Credit {
 
     @Id
@@ -36,20 +38,12 @@ public class Credit {
     private float interestRate;
 
     @Column(name="open_date")
-    private LocalDateTime openDate;
+    private LocalDate openDate;
 
     @Column(name="end_date")
-    private LocalDateTime endDate;
+    private LocalDate endDate;
 
     @Column(name="status")
     private CreditStatus creditStatus;
 
-
-    public Credit(String creditNumber, float loanDebt, float interestRate, CreditStatus creditStatus, LocalDateTime endDate) {
-        this.creditNumber = creditNumber;
-        this.loanDebt = loanDebt;
-        this.interestRate = interestRate;
-        this.creditStatus = creditStatus;
-        this.endDate = endDate;
-    }
 }

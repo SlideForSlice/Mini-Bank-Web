@@ -25,7 +25,7 @@ public class CardController {
         return "/card-service/index";
     }
 
-    @PostMapping("/create-card")
+    @PostMapping("/create")
     public Map<String, String> createCard(@RequestBody BankAccountIdDTO idBankAccount) {
 
         int id = idBankAccount.getId();
@@ -35,7 +35,7 @@ public class CardController {
         return Map.of("status", "success");
     }
 
-    @DeleteMapping("/delete-card/{cardId}")
+    @DeleteMapping("/{cardId}/delete")
     public void deleteCurrentCard(@PathVariable int cardId) {
         cardService.deleteCard(cardId);
     }

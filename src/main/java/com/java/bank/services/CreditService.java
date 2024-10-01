@@ -2,6 +2,7 @@ package com.java.bank.services;
 
 import com.java.bank.models.BankAccount;
 import com.java.bank.models.Credit;
+import com.java.bank.repositories.BankAccountRepository;
 import com.java.bank.repositories.CardRepository;
 import com.java.bank.repositories.CreditRepository;
 import com.java.bank.models.enums.CreditStatus;
@@ -10,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,10 +23,12 @@ public class CreditService {
 
     private final CreditRepository creditRepository;
     private final CardRepository cardRepository;
+    private final BankAccountRepository bankAccountRepository;
 
-    public CreditService(CreditRepository creditRepository, CardRepository cardRepository) {
+    public CreditService(CreditRepository creditRepository, CardRepository cardRepository, BankAccountRepository bankAccountRepository) {
         this.creditRepository = creditRepository;
         this.cardRepository = cardRepository;
+        this.bankAccountRepository = bankAccountRepository;
     }
 
     public List<Credit> getAllCredits() {
@@ -38,22 +43,23 @@ public class CreditService {
     }
 
     @Transactional
-    public void  createCredit(BankAccount bankAccount, int amount) {
+    public void  createCredit(int idBankAccount, int creditTerm) {
 
         Credit credit = new Credit();
 
         String creditNumber;
         do {
-            creditNumber = NumberGenerator.generateNumber();
+            creditNumber = NumberGenerator.generateCardNumber();
         } while (creditRepository.findByCreditNumber(creditNumber).isPresent());
 
-        creditRepository.findById(credit.getId()).get().setCreditNumber(creditNumber);
-        creditRepository.findById(credit.getId()).get().setBankAccount(bankAccount);
-        creditRepository.findById(credit.getId()).get().setLoanDebt(amount);
-        creditRepository.findById(credit.getId()).get().setCreditStatus(CreditStatus.ACTIVE);
-
-        log.info("Create Credit");
-
+        credit.setCreditNumber(creditNumber);
+        credit.setBankAccount(bankAccountRepository.findById(idBankAccount).get());
+        credit.setLoanDebt(0);
+        credit.setInterestRate(14);
+        credit.setOpenDate(LocalDate.now());
+        credit.setEndDate(LocalDate.now().plusMonths(creditTerm));
+        credit.setCreditStatus(CreditStatus.ACTIVE);
+        log.info("Credit created");
         creditRepository.save(credit);
     }
 
@@ -77,17 +83,24 @@ public class CreditService {
         float currentCreditBalance = creditRepository.findById(id).get().getLoanDebt();
 //        нужно получить баланс карты
         float currentCardBalance = cardRepository.findByCardNumber(cardNumber).get().getBalance();
-//        проверка, достаточно ли баланса?
-        if (currentCardBalance >= amount) {
-            creditRepository.findById(id).get().setLoanDebt(currentCreditBalance - amount);
-            creditRepository.save(creditRepository.findById(id).get());
+//        если сумма кредита равна 0, то кредит считается погашенным
+        if (currentCreditBalance >= 0 ) {
+            //        проверка, достаточно ли баланса?
+            if (currentCardBalance >= amount) {
+                creditRepository.findById(id).get().setLoanDebt(currentCreditBalance - amount);
+                creditRepository.save(creditRepository.findById(id).get());
 
-            cardRepository.findByCardNumber(cardNumber).get().setBalance(currentCardBalance - amount);
-            cardRepository.save(cardRepository.findByCardNumber(cardNumber).get());
+                cardRepository.findByCardNumber(cardNumber).get().setBalance(currentCardBalance - amount);
+                cardRepository.save(cardRepository.findByCardNumber(cardNumber).get());
+            } else {
+                log.info("insufficient balance");
+
+            }
         } else {
-            log.info("insufficient balance");
-//            TODO
+            return;
         }
+
+
     }
 
     @Transactional
@@ -98,27 +111,37 @@ public class CreditService {
 //        нужно получить баланс карты
         float currentCardBalance = cardRepository.findByCardNumber(cardNumber).get().getBalance();
 //        проверка, достаточно ли баланса?
-        if (currentCreditBalance >= amount) {
-            creditRepository.findById(id).get().setLoanDebt(currentCreditBalance - amount);
-            creditRepository.save(creditRepository.findById(id).get());
 
+            creditRepository.findById(id).get().setLoanDebt(currentCreditBalance + amount);
+            creditRepository.save(creditRepository.findById(id).get());
             cardRepository.findByCardNumber(cardNumber).get().setBalance(currentCardBalance + amount);
             cardRepository.save(cardRepository.findByCardNumber(cardNumber).get());
-        } else {
-            log.info("insufficient credit balance");
-//            TODO
-        }
+
     }
 
     @Transactional
-    public void addInterestToCredit(int id, float interest) {
-        log.info("payInterestToDeposit" + id + ", interest" + interest);
-//        получили баланс
-        float currentDepositBalance = creditRepository.findById(id).get().getLoanDebt();
-//        рассчет ежедневной ставки
-        float dailyInterest = interest / 30;
-//      выплачиваем процент
-//        TODO
+    public void accrueInterest() {
+        log.info("accrueInterest");
+        LocalDate today = LocalDate.now();
+        List<Credit> activeCredits = creditRepository.findByEndDateAfter(today);
+
+        for (Credit credit : activeCredits) {
+            float interest = calculateInterest(credit);
+            credit.setLoanDebt(credit.getLoanDebt() + interest);
+            creditRepository.save(credit);
+        }
     }
 
+    private float calculateInterest(Credit credit) {
+        float  loanDebt = credit.getLoanDebt();
+        float interestRate = credit.getInterestRate();
+        LocalDate startDate = credit.getOpenDate();
+        LocalDate endDate = credit.getEndDate();
+
+        long days = startDate.until(endDate).getDays();
+        float dailyInterestRate = interestRate / 365;
+        float interest = loanDebt * dailyInterestRate * days;
+
+        return interest;
+    }
 }

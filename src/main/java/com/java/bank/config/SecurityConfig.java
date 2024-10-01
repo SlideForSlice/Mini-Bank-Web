@@ -39,7 +39,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/login", "auth/registration", "auth/registration/details",
                                 "/error").permitAll()
-                        .requestMatchers("/bank-account-service/**", "/card-service/**").hasAnyRole("USER")
+                        .requestMatchers("/bank-account-service/**", "/card-service/**",
+                                "/credit-service/**", "/deposit-service/**").hasAnyRole("USER")
                         .anyRequest().authenticated()
                 )
                 .formLogin(formLogin -> formLogin

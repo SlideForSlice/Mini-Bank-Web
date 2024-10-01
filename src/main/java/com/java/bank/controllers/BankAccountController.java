@@ -21,9 +21,9 @@ public class BankAccountController {
     private final BankAccountService bankAccountService;
     private final MapperForDTO mapper;
 
-    @GetMapping("/{idBankAccount}")
-    public BankAccountDTO getBankAccount(@PathVariable int idBankAccount) {
-        return mapper.convertToBankAccountDTO(bankAccountService.getBankAccountById(idBankAccount).orElse(null));
+    @GetMapping("/{id}")
+    public BankAccountDTO getBankAccount(@PathVariable int id) {
+        return mapper.convertToBankAccountDTO(bankAccountService.getBankAccountById(id).orElse(null));
     }
 
     @PatchMapping("/{id}/update")

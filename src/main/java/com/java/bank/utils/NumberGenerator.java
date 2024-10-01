@@ -7,7 +7,7 @@ import java.util.Random;
 @Component
 public class NumberGenerator {
 
-    public static String generateNumber() {
+    public static String generateCardNumber() {
         Random random = new Random();
         StringBuilder cardNumber = new StringBuilder();
 
@@ -19,6 +19,18 @@ public class NumberGenerator {
         // Вычисляем контрольную цифру по алгоритму Луна
         int checksum = calculateLuhnChecksum(cardNumber.toString());
         cardNumber.append(checksum);
+
+        return cardNumber.toString();
+    }
+
+    public static String generateCreditNumber() {
+        Random random = new Random();
+        StringBuilder cardNumber = new StringBuilder("RUBCRED");
+
+        // Генерируем первые 17 цифр
+        for (int i = 0; i < 17; i++) {
+            cardNumber.append(random.nextInt(10)); // добавляем цифры от 0 до 9
+        }
 
         return cardNumber.toString();
     }
