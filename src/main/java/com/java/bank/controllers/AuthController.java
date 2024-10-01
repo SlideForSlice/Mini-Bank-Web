@@ -5,7 +5,7 @@ import com.java.bank.controllers.DTO.BankAccountDTO;
 import com.java.bank.controllers.DTO.UserDTO;
 import com.java.bank.models.BankAccount;
 import com.java.bank.models.User;
-import com.java.bank.DAO.UserRepository;
+import com.java.bank.repositories.UserRepository;
 import com.java.bank.security.JWTUtil;
 import com.java.bank.services.BankAccountService;
 import com.java.bank.services.RegistrationService;
@@ -14,8 +14,6 @@ import com.java.bank.utils.MapperForDTO;
 import com.java.bank.utils.UserErrorResponse;
 import com.java.bank.utils.UserValidator;
 import jakarta.validation.Valid;
-import jakarta.validation.ValidationException;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")

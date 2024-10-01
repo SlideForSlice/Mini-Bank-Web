@@ -2,8 +2,8 @@ package com.java.bank.services;
 
 import com.java.bank.models.BankAccount;
 import com.java.bank.models.Deposit;
-import com.java.bank.DAO.CardRepository;
-import com.java.bank.DAO.DepositRepository;
+import com.java.bank.repositories.CardRepository;
+import com.java.bank.repositories.DepositRepository;
 import com.java.bank.models.enums.DepositStatus;
 import com.java.bank.utils.NumberGenerator;
 import lombok.extern.slf4j.Slf4j;

@@ -1,7 +1,6 @@
-package com.java.bank.DAO;
+package com.java.bank.repositories;
 
 import com.java.bank.models.BankAccount;
-import com.java.bank.models.Card;
 import com.java.bank.models.Credit;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

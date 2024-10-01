@@ -1,10 +1,10 @@
 package com.java.bank.services;
 
 
-import com.java.bank.DAO.BankAccountRepository;
+import com.java.bank.repositories.BankAccountRepository;
 import com.java.bank.models.BankAccount;
 import com.java.bank.models.Card;
-import com.java.bank.DAO.CardRepository;
+import com.java.bank.repositories.CardRepository;
 import com.java.bank.utils.NumberGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service

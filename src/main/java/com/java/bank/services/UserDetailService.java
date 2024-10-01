@@ -1,7 +1,7 @@
 package com.java.bank.services;
 
 import com.java.bank.models.User;
-import com.java.bank.DAO.UserRepository;
+import com.java.bank.repositories.UserRepository;
 import com.java.bank.security.UserDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

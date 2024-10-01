@@ -1,7 +1,7 @@
 package com.java.bank.utils;
 
 import com.java.bank.models.BankAccount;
-import com.java.bank.DAO.BankAccountRepository;
+import com.java.bank.repositories.BankAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

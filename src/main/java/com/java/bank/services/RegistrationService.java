@@ -1,7 +1,7 @@
 package com.java.bank.services;
 
 import com.java.bank.models.User;
-import com.java.bank.DAO.UserRepository;
+import com.java.bank.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;

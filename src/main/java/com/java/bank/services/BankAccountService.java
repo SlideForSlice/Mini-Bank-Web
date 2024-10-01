@@ -1,9 +1,9 @@
 package com.java.bank.services;
 
-import com.java.bank.DAO.CardRepository;
-import com.java.bank.DAO.UserRepository;
+import com.java.bank.repositories.CardRepository;
+import com.java.bank.repositories.UserRepository;
 import com.java.bank.models.BankAccount;
-import com.java.bank.DAO.BankAccountRepository;
+import com.java.bank.repositories.BankAccountRepository;
 import com.java.bank.models.Card;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
