@@ -30,7 +30,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@RequiredArgsConstructor()
 public class AuthController {
 
     private final RegistrationService registrationService;

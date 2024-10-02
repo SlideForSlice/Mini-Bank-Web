@@ -8,9 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @Getter
 @Setter
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class UserErrorResponse {
     private String errorMessage;
     private long timestamp;
 
+    public UserErrorResponse(String errorMessage, long timestamp) {
+        this.errorMessage = errorMessage;
+        this.timestamp = timestamp;
+    }
 }
