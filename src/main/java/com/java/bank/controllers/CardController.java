@@ -7,6 +7,7 @@ import com.java.bank.models.Card;
 import com.java.bank.services.CardService;
 import com.java.bank.utils.MapperForDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -14,7 +15,7 @@ import java.util.Optional;
 
 @RequestMapping("/card-service")
 @RestController
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class CardController {
     private final CardService cardService;
     private final MapperForDTO mapperForDTO;

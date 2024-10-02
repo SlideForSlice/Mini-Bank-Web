@@ -1,6 +1,7 @@
 package com.java.bank.config;
 
 import com.java.bank.services.UserDetailService;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -21,16 +22,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class SecurityConfig {
 
     private final UserDetailService userDetailService;
     private final JWTFilter jwtFilter;
-
-    @Autowired
-    public SecurityConfig(UserDetailService userDetailService, JWTFilter jwtFilter) {
-        this.userDetailService = userDetailService;
-        this.jwtFilter = jwtFilter;
-    }
 
     @Bean
     protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

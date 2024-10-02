@@ -14,6 +14,7 @@ import com.java.bank.utils.MapperForDTO;
 import com.java.bank.utils.UserErrorResponse;
 import com.java.bank.utils.UserValidator;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class AuthController {
 
     private final RegistrationService registrationService;
@@ -39,21 +41,6 @@ public class AuthController {
     private final MapperForDTO mapper;
     private final BankAccountService bankAccountService;
     private final UserRepository userRepository;
-
-    @Autowired
-    public AuthController(RegistrationService registrationService, JWTUtil jwtUtil,
-                          AuthenticationManager authenticationManager, UserValidator userValidator,
-                          BankAccountValidator bankAccountValidator, MapperForDTO mapper,
-                          BankAccountService bankAccountService, UserRepository userRepository) {
-        this.registrationService = registrationService;
-        this.jwtUtil = jwtUtil;
-        this.authenticationManager = authenticationManager;
-        this.userValidator = userValidator;
-        this.bankAccountValidator = bankAccountValidator;
-        this.mapper = mapper;
-        this.bankAccountService = bankAccountService;
-        this.userRepository = userRepository;
-    }
 
     @GetMapping("/login")
     public String login() {
@@ -140,8 +127,5 @@ public class AuthController {
         );
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
-
-
-
 
 }

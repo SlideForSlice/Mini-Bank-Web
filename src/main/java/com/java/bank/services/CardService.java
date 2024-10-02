@@ -6,6 +6,7 @@ import com.java.bank.models.BankAccount;
 import com.java.bank.models.Card;
 import com.java.bank.repositories.CardRepository;
 import com.java.bank.utils.NumberGenerator;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,16 +19,11 @@ import java.util.Optional;
 @Service
 @Slf4j
 @Transactional(readOnly = true)
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class CardService {
 
     private final CardRepository cardRepository;
     private final BankAccountRepository bankAccountRepository;
-
-    @Autowired
-    public CardService(CardRepository cardRepository, BankAccountRepository bankAccountRepository) {
-        this.cardRepository = cardRepository;
-        this.bankAccountRepository = bankAccountRepository;
-    }
 
     public Optional<Card> getById(int id) {
         log.info("Get Card by id: " + id);

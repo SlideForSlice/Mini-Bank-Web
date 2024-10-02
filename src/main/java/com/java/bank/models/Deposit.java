@@ -5,14 +5,15 @@ import com.java.bank.models.enums.DepositStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
 @Data
-@NoArgsConstructor
 @Table(name = "deposit")
+@RequiredArgsConstructor
 public class Deposit {
 
     @Id
@@ -30,10 +31,10 @@ public class Deposit {
     private float interest;
 
     @Column(name = "open_date")
-    private LocalDateTime openDate;
+    private LocalDate openDate;
 
     @Column(name = "end_date")
-    private LocalDateTime endDate;
+    private LocalDate endDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
@@ -44,11 +45,4 @@ public class Deposit {
     @JsonBackReference
     private BankAccount bankAccount;
 
-    public Deposit(String depositNum, float balance, float interest, LocalDateTime endDate, DepositStatus status) {
-        this.depositNum = depositNum;
-        this.balance = balance;
-        this.interest = interest;
-        this.endDate = endDate;
-        this.status = status;
-    }
 }

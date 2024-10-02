@@ -7,7 +7,9 @@ import com.java.bank.repositories.CardRepository;
 import com.java.bank.repositories.CreditRepository;
 import com.java.bank.models.enums.CreditStatus;
 import com.java.bank.utils.NumberGenerator;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,17 +21,12 @@ import java.util.Optional;
 @Service
 @Slf4j
 @Transactional(readOnly = true)
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class CreditService {
 
     private final CreditRepository creditRepository;
     private final CardRepository cardRepository;
     private final BankAccountRepository bankAccountRepository;
-
-    public CreditService(CreditRepository creditRepository, CardRepository cardRepository, BankAccountRepository bankAccountRepository) {
-        this.creditRepository = creditRepository;
-        this.cardRepository = cardRepository;
-        this.bankAccountRepository = bankAccountRepository;
-    }
 
     public List<Credit> getAllCredits() {
         log.info("getAllCredits");
@@ -49,7 +46,7 @@ public class CreditService {
 
         String creditNumber;
         do {
-            creditNumber = NumberGenerator.generateCardNumber();
+            creditNumber = NumberGenerator.generateCreditNumber();
         } while (creditRepository.findByCreditNumber(creditNumber).isPresent());
 
         credit.setCreditNumber(creditNumber);

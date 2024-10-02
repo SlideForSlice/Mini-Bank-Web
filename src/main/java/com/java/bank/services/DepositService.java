@@ -1,34 +1,33 @@
 package com.java.bank.services;
 
 import com.java.bank.models.BankAccount;
+import com.java.bank.models.Credit;
 import com.java.bank.models.Deposit;
+import com.java.bank.repositories.BankAccountRepository;
 import com.java.bank.repositories.CardRepository;
 import com.java.bank.repositories.DepositRepository;
 import com.java.bank.models.enums.DepositStatus;
 import com.java.bank.utils.NumberGenerator;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
 @Slf4j
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class DepositService {
 
     private final DepositRepository depositRepository;
     private final CardRepository cardRepository;
     private final CardService cardService;
-
-    @Autowired
-    public DepositService(DepositRepository depositRepository, CardRepository cardRepository, CardService cardService) {
-        this.depositRepository = depositRepository;
-        this.cardRepository = cardRepository;
-        this.cardService = cardService;
-    }
+    private final BankAccountRepository bankAccountRepository;
 
     public List<Deposit> getAllDeposits(BankAccount bankAccount) {
         log.info("getAllDeposits");
@@ -41,20 +40,22 @@ public class DepositService {
     }
 
     @Transactional
-    public void createDeposit(BankAccount bankAccount) {
+    public void createDeposit(int idBankAccount, int creditTerm) {
 
         Deposit deposit = new Deposit();
 
         String depositNumber;
         do {
-            depositNumber = NumberGenerator.generateCardNumber();
-        } while (depositRepository.findByDepositNum(depositNumber).isEmpty());
+            depositNumber = NumberGenerator.generateDepositNumber();
+        } while (depositRepository.findByDepositNum(depositNumber).isPresent());
 
-        depositRepository.findById(deposit.getId()).get().setDepositNum(depositNumber);
-        depositRepository.findById(deposit.getId()).get().setBankAccount(bankAccount);
-        depositRepository.findById(deposit.getId()).get().setBalance(0);
-        depositRepository.findById(deposit.getId()).get().setStatus(DepositStatus.ACTIVE);
-
+        deposit.setDepositNum(depositNumber);
+        deposit.setBankAccount(bankAccountRepository.findById(idBankAccount).get());
+        deposit.setBalance(0);
+        deposit.setInterest(10);
+        deposit.setOpenDate(LocalDate.now());
+        deposit.setEndDate(LocalDate.now().plusMonths(creditTerm));
+        deposit.setStatus(DepositStatus.ACTIVE);
         log.info("Create Deposit");
 
         depositRepository.save(deposit);
@@ -112,18 +113,30 @@ public class DepositService {
         }
     }
 
-//    начисление процентов
     @Transactional
-    public void payInterestToDeposit(int id, float interest) {
-        log.info("payInterestToDeposit" + id + ", interest" + interest);
-//        получили баланс
-        float currentDepositBalance = depositRepository.findById(id).get().getBalance();
-//        рассчет ежедневной ставки
-        float dailyInterest = interest / 30;
-//      выплачиваем процент
-        currentDepositBalance = currentDepositBalance + (currentDepositBalance * dailyInterest);
-        depositRepository.findById(id).get().setBalance(currentDepositBalance);
-        depositRepository.save(depositRepository.findById(id).get());
+    public void accrueInterest() {
+        log.info("accrueInterest");
+        LocalDate today = LocalDate.now();
+        List<Deposit> activeDeposits = depositRepository.findByEndDateAfter(today);
+
+        for (Deposit deposit : activeDeposits) {
+            float interest = calculateInterest(deposit);
+            deposit.setBalance(deposit.getBalance() + interest);
+            depositRepository.save(deposit);
+        }
+    }
+
+    private float calculateInterest(Deposit deposit) {
+        float  balance = deposit.getBalance();
+        float interestRate = deposit.getInterest();
+        LocalDate startDate = deposit.getOpenDate();
+        LocalDate endDate = deposit.getEndDate();
+
+        long days = startDate.until(endDate).getDays();
+        float dailyInterestRate = interestRate / 365;
+        float interest = balance * dailyInterestRate * days;
+
+        return interest;
     }
 
 }

@@ -1,16 +1,14 @@
 package com.java.bank.models;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 @Entity
 @Data
 @Accessors(chain = true)
 @Table(name="user_cred")
+@RequiredArgsConstructor
 public class User {
 
     @Id

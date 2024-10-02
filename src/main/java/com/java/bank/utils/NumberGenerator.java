@@ -35,6 +35,18 @@ public class NumberGenerator {
         return cardNumber.toString();
     }
 
+    public static String generateDepositNumber() {
+        Random random = new Random();
+        StringBuilder cardNumber = new StringBuilder("RUBDEP");
+
+        // Генерируем первые 17 цифр
+        for (int i = 0; i < 18; i++) {
+            cardNumber.append(random.nextInt(10)); // добавляем цифры от 0 до 9
+        }
+
+        return cardNumber.toString();
+    }
+
     public static int calculateLuhnChecksum(String cardNumber) {
         int sum = 0;
         boolean alternate = false;

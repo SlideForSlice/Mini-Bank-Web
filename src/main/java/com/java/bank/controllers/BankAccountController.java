@@ -7,6 +7,7 @@ import com.java.bank.services.BankAccountService;
 import com.java.bank.utils.MapperForDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.Optional;
 @RequestMapping("/bank-account-service")
 @RestController
 @Slf4j
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class BankAccountController {
 
     private final BankAccountService bankAccountService;

@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @Table(name = "card")
+@RequiredArgsConstructor
 public class Card {
 
     @Id
@@ -43,10 +45,5 @@ public class Card {
     private BankAccount bankAccount;
 
 
-    public Card(String cardNumber, String status, float balance) {
-        this.cardNumber = cardNumber;
-        this.status = status;
-        this.balance = balance;
-    }
 
 }

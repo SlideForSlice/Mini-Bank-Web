@@ -1,6 +1,8 @@
 package com.java.bank.security;
 
 import com.java.bank.models.User;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -10,13 +12,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class UserDetail implements UserDetails {
 
     private final User user;
-
-    public UserDetail(User user) {
-        this.user = user;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
