@@ -44,6 +44,7 @@ public class Credit {
     private LocalDate endDate;
 
     @Column(name="status")
+    @Enumerated(EnumType.STRING)
     private CreditStatus creditStatus;
 
 }

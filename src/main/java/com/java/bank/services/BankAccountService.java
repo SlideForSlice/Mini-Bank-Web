@@ -1,5 +1,6 @@
 package com.java.bank.services;
 
+import com.java.bank.controllers.DTO.BankAccountDTO;
 import com.java.bank.repositories.CardRepository;
 import com.java.bank.repositories.UserRepository;
 import com.java.bank.models.BankAccount;

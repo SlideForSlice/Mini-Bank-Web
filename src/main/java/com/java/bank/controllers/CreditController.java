@@ -38,17 +38,18 @@ public class CreditController {
     }
 
     @PostMapping("/create")
-    public Map<String, String> createCredit(@RequestBody BankAccountIdDTO idBankAccount,
+    public ResponseEntity<HttpStatus> createCredit(@RequestBody BankAccountIdDTO idBankAccount,
                             @RequestParam int creditTerm) {
 //        creditTerm = срок кредита в месяцах
         int id = idBankAccount.getId();
         creditService.createCredit(id, creditTerm);
-        return Map.of("status", "success");
+        return ResponseEntity.ok(HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}/delete")
-    public void deleteCredit(@PathVariable int id) {
+    public ResponseEntity<HttpStatus> deleteCredit(@PathVariable int id) {
         creditService.deleteCredit(id);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @PatchMapping("/{id}/cash-in")

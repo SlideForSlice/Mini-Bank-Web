@@ -22,23 +22,22 @@ import java.util.List;
 public class BankAccountDTO {
 
 
-    @NotNull(message = "Full name should not be empty!")
+
     private String fullName;
 
-    @NotNull(message = "Passport number should not be empty!")
+
     private String passportNumber;
 
-    @NotNull(message = "DOB should not be empty!")
     private LocalDate dateOfBirth;
 
-    @NotNull(message = "Address should not be empty!")
+
     private String address;
 
-    @NotNull(message = "Phone number should not be empty!")
+
     private String phoneNumber;
 
     @Email(message = "Email is not valid")
-    @NotNull(message = "Email should not be empty!")
+
     private String email;
 
     private User userId;

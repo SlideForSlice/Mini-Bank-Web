@@ -9,14 +9,12 @@ public class NumberGenerator {
 
     public static String generateCardNumber() {
         Random random = new Random();
-        StringBuilder cardNumber = new StringBuilder();
+        StringBuilder cardNumber = new StringBuilder("4");
 
-        // Генерируем первые 15 цифр
-        for (int i = 0; i < 15; i++) {
-            cardNumber.append(random.nextInt(10)); // добавляем цифры от 0 до 9
+        for (int i = 0; i < 14; i++) {
+            cardNumber.append(random.nextInt(10));
         }
 
-        // Вычисляем контрольную цифру по алгоритму Луна
         int checksum = calculateLuhnChecksum(cardNumber.toString());
         cardNumber.append(checksum);
 

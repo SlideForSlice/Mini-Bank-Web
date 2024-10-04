@@ -5,17 +5,14 @@ import com.java.bank.models.enums.CardStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @Table(name = "card")
 @RequiredArgsConstructor
 public class Card {
@@ -36,8 +33,8 @@ public class Card {
     private LocalDateTime openDate;
 
     @Column(name = "status")
-//    @Enumerated(EnumType.STRING)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private CardStatus cardStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bank_account", referencedColumnName = "id")

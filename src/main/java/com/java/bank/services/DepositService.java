@@ -1,7 +1,6 @@
 package com.java.bank.services;
 
 import com.java.bank.models.BankAccount;
-import com.java.bank.models.Credit;
 import com.java.bank.models.Deposit;
 import com.java.bank.repositories.BankAccountRepository;
 import com.java.bank.repositories.CardRepository;
@@ -55,7 +54,7 @@ public class DepositService {
         deposit.setInterest(10);
         deposit.setOpenDate(LocalDate.now());
         deposit.setEndDate(LocalDate.now().plusMonths(creditTerm));
-        deposit.setStatus(DepositStatus.ACTIVE);
+        deposit.setDepositStatus(DepositStatus.ACTIVE);
         log.info("Create Deposit");
 
         depositRepository.save(deposit);

@@ -48,8 +48,7 @@ public class AuthController {
     }
 
     @GetMapping("/registration")
-    public String registration(@ModelAttribute("user") User user,
-                               @ModelAttribute("user") BankAccount userAccount) {
+    public String registration() {
         return ("auth/registration");
     }
 
@@ -72,7 +71,7 @@ public class AuthController {
     }
 
     @PostMapping("/registration/details")
-    public String performRegistrationBankAccDetails(@RequestBody @Valid BankAccountDTO bankAccountDTO,
+    public ResponseEntity<HttpStatus> performRegistrationBankAccDetails(@RequestBody @Valid BankAccountDTO bankAccountDTO,
                                                     BindingResult bindingResult,
                                                     @RequestHeader("Authorization") String token) {
 
@@ -102,7 +101,7 @@ public class AuthController {
             throw new JWTVerificationException(errors.toString());
         }
         bankAccountService.createBankAccount(bankAccount);
-        return HttpStatus.CREATED.toString();
+        return ResponseEntity.ok(HttpStatus.CREATED);
     }
 
 

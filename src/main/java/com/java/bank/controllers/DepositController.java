@@ -9,6 +9,8 @@ import com.java.bank.utils.MapperForDTO;
 import lombok.RequiredArgsConstructor;
 import org.apache.catalina.mapper.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -28,16 +30,17 @@ public class DepositController {
     }
 
     @PostMapping("/create")
-    public Map<String, String> createDeposit(@RequestBody BankAccountIdDTO idBankAccount,
+    public ResponseEntity<HttpStatus> createDeposit(@RequestBody BankAccountIdDTO idBankAccount,
                                              @RequestParam int depositTerm) {
         int id = idBankAccount.getId();
         depositService.createDeposit(id, depositTerm);
-        return Map.of("status", "success");
+        return ResponseEntity.ok(HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}/delete")
-    public void deleteDeposit(@PathVariable int id) {
+    public ResponseEntity<HttpStatus> deleteDeposit(@PathVariable int id) {
         depositService.deleteDeposit(id);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @PatchMapping("/{id}/cash-in")

@@ -1,6 +1,7 @@
 package com.java.bank.services;
 
 
+import com.java.bank.models.enums.CardStatus;
 import com.java.bank.repositories.BankAccountRepository;
 import com.java.bank.models.BankAccount;
 import com.java.bank.models.Card;
@@ -55,7 +56,7 @@ public class CardService {
         card.setBankAccount(bankAccountRepository.findById(idBankAccount).get());
         card.setBalance(0);
         card.setOpenDate(LocalDateTime.now());
-        card.setStatus("Active");
+        card.setCardStatus(CardStatus.ACTIVE);
 
         log.info("Create Card");
 

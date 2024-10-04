@@ -8,6 +8,8 @@ import com.java.bank.services.CardService;
 import com.java.bank.utils.MapperForDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -27,55 +29,55 @@ public class CardController {
     }
 
     @PostMapping("/create")
-    public Map<String, String> createCard(@RequestBody BankAccountIdDTO idBankAccount) {
+    public ResponseEntity<HttpStatus> createCard(@RequestBody BankAccountIdDTO idBankAccount) {
 
         int id = idBankAccount.getId();
 
         cardService.createCard(id);
 
-        return Map.of("status", "success");
+        return ResponseEntity.ok(HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{cardId}/delete")
-    public void deleteCurrentCard(@PathVariable int cardId) {
-        cardService.deleteCard(cardId);
+    @DeleteMapping("/{id}/delete")
+    public ResponseEntity<HttpStatus> deleteCurrentCard(@PathVariable int id) {
+        cardService.deleteCard(id);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @PatchMapping("/{cardId}/cash-in")
-    public Map<String, Float> cashIn(@PathVariable int cardId,
+    @PatchMapping("/{id}/cash-in")
+    public Map<String, Float> cashIn(@PathVariable int id,
                                      @RequestParam float amount) {
-        cardService.cashIn(cardId, amount);
+        cardService.cashIn(id, amount);
 
-        Optional<Card> card = cardService.getById(cardId);
+        Optional<Card> card = cardService.getById(id);
 
         return Map.of("balance", card.get().getBalance());
     }
 
-    @PatchMapping("/{cardId}/cash-out")
-    public Map<String, Float> cashOut(@PathVariable int cardId,
+    @PatchMapping("/{id}/cash-out")
+    public Map<String, Float> cashOut(@PathVariable int id,
                         @RequestParam float amount) {
 
-        cardService.cashOut(cardId, amount);
+        cardService.cashOut(id, amount);
 
-        Optional<Card> card = cardService.getById(cardId);
+        Optional<Card> card = cardService.getById(id);
 
         return Map.of("balance", card.get().getBalance());
     }
 
 
-    @PatchMapping("/{cardId}/send")
-    public Map<String, Float> send(@PathVariable int cardId,
+    @PatchMapping("/{id}/send")
+    public Map<String, Float> send(@PathVariable int id,
                      @RequestParam float amount,
                      @RequestBody CardTransDTO cardTransDTO) {
 
         String cardNumber = mapperForDTO.convertToCard(cardTransDTO).getCardNumber();
 
-        cardService.sendMoneyOnOtherCard(cardId, amount, cardNumber);
+        cardService.sendMoneyOnOtherCard(id, amount, cardNumber);
 
-        Optional<Card> card = cardService.getById(cardId);
+        Optional<Card> card = cardService.getById(id);
 
         return Map.of("balance", card.get().getBalance());
     }
-
 
 }

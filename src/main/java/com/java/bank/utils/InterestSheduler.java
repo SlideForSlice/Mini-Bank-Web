@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
-public class InteresSheduler {
+public class InterestSheduler {
     private final DepositService depositService;
     private final CreditService creditService;
 

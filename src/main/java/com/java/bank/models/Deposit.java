@@ -4,11 +4,9 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.java.bank.models.enums.DepositStatus;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -38,7 +36,7 @@ public class Deposit {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private DepositStatus status;
+    private DepositStatus depositStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bank_account", referencedColumnName = "id")

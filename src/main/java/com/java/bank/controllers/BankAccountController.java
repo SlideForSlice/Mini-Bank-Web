@@ -8,6 +8,8 @@ import com.java.bank.utils.MapperForDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,24 +30,23 @@ public class BankAccountController {
     }
 
     @PatchMapping("/{id}/update")
-    public BankAccountDTO updateBankAccount(@PathVariable int id,
-                                  @RequestBody BankAccount bankAccountUpdated) {
+    public ResponseEntity<HttpStatus> updateBankAccount(@PathVariable int id,
+                                                        @RequestBody BankAccount bankAccountUpdated) {
         bankAccountService.updateBankAccount(id, bankAccountUpdated);
-        return mapper.convertToBankAccountDTO(bankAccountService.getBankAccountById(id).orElse(null));
+//        mapper.convertToBankAccountDTO(bankAccountService.getBankAccountById(id).orElse(null));
+        return ResponseEntity.ok(HttpStatus.CREATED);
     }
 
-    // TODO сделать каскадное удаление
-    @DeleteMapping("/{id}/delete")
-    public void deleteBankAccount(@PathVariable int id) {
 
+    @DeleteMapping("/{id}/delete")
+    public ResponseEntity<HttpStatus> deleteBankAccount(@PathVariable int id) {
         bankAccountService.deleteBankAccount(id);
+        return ResponseEntity.ok(HttpStatus.ACCEPTED) ;
     }
 
     @GetMapping("/{id}/get-cards")
     public List<Card> getAllCards(@PathVariable int id){
-
         return bankAccountService.getAllCards(id);
     }
-
 
 }
