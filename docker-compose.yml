@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  bank-app:
+  app:
     build: .  # Указываем текущую директорию как контекст сборки
     container_name: bank-app
     ports:
