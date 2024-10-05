@@ -1,7 +1,22 @@
 version: '3'
 services:
+  build:
+    container_name: bank-app
+    ports:
+      - "8080:8080"  # Порт вашего Java-приложения
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/bank
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=none
+      - SPRING_JWT_SECRET=NUGGETS
+    depends_on:
+      - db
+
+
   db:
-    image: postgres:13
+    image: postgres:latest
+    container_name: db
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: root
@@ -11,16 +26,15 @@ services:
     ports:
       - "5432:5432"
 
-  tomcat:
-    build: .
+  nginx:
+    image: nginx:latest
+    container_name: nginx
     ports:
-      - "8080:8080"
+      - "80:80"  # Порт для Nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/sites-available/bank.conf  # Путь к вашему конфигурационному файлу Nginx
     depends_on:
-      - db
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/bank
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSSWORD: root
+      - bank-app
 
 volumes:
   db_data:
