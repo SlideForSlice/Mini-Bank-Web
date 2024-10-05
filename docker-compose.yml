@@ -3,7 +3,7 @@ version: '3'
 services:
   bank-app:
     build: .  # Указываем текущую директорию как контекст сборки
-    container_name: bank-app1
+    container_name: bank-app
     ports:
       - "8080:8080"  # Порт вашего Java-приложения
     environment:
@@ -30,7 +30,7 @@ services:
 
 
   nginx:
-    image: nginx:latest
+    image: nginx:1.27.2
     container_name: nginx
     ports:
       - "80:80"  # Порт для Nginx
