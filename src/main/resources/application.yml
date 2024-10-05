@@ -1,7 +1,7 @@
 #DataBase
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/bank
+    url: jdbc:postgresql://db:5432/bank
     username: postgres
     password: root
     driver-class-name: org.postgresql.Driver
@@ -12,3 +12,8 @@ spring:
 
   jwt:
     secret: NUGGETS
+
+  logging:
+    level:
+      org.springframework.web: DEBUG
+      org.hibernate: DEBUG
