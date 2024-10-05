@@ -2,10 +2,9 @@ package com.java.bank.services;
 
 import com.java.bank.models.User;
 import com.java.bank.repositories.UserRepository;
-import com.java.bank.security.UserDetail;
+import com.java.bank.security.UserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -21,12 +20,12 @@ public class UserDetailService implements UserDetailsService {
 
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public org.springframework.security.core.userdetails.UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findByUsername(username);
         if (user.isEmpty()) {
             throw new UsernameNotFoundException("User not found");
         }
-        return new UserDetail(user.get());
+        return new UserDetails(user.get());
     }
 
 

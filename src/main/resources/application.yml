@@ -7,8 +7,8 @@ spring:
 
   jpa:
     show-sql: true
-#    hibernate.ddl-auto: none
-    hibernate: update
+    hibernate.ddl-auto: none
+#    hibernate: update
 
   jwt:
     secret: NUGGETS
