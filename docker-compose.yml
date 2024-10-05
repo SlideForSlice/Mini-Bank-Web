@@ -33,7 +33,7 @@ services:
     ports:
       - "80:80"  # Порт для Nginx
     volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/bank.conf  # Путь к вашему конфигурационному файлу Nginx
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf  # Путь к вашему конфигурационному файлу Nginx
     depends_on:
       - bank-app
 
