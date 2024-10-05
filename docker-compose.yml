@@ -40,4 +40,4 @@ services:
       - bank-app
 
 volumes:
-  db_d
+  db_data:
