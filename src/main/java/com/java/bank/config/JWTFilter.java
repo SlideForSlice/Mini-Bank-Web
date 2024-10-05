@@ -2,7 +2,7 @@ package com.java.bank.config;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.java.bank.security.JWTUtil;
-import com.java.bank.services.UserDetailService;
+import com.java.bank.services.UserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,7 +22,7 @@ import java.io.IOException;
 public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
-    private final UserDetailService userDetailService;
+    private final UserDetailsService userDetailService;
 
 
 

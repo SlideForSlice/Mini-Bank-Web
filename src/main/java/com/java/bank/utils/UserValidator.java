@@ -1,7 +1,7 @@
 package com.java.bank.utils;
 
 import com.java.bank.models.User;
-import com.java.bank.services.UserDetailService;
+import com.java.bank.services.UserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,7 +13,7 @@ import org.springframework.validation.Validator;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class UserValidator implements Validator {
 
-    private final UserDetailService userDetailService;
+    private final UserDetailsService userDetailService;
 
     @Override
     public boolean supports(Class<?> clazz) {
