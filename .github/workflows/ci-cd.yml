@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: 24.04.1
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
@@ -20,6 +20,6 @@ jobs:
           username: ${{secrets.SERVER_USERNAME}}
           password: ${{secrets.SERVER_PASSWORD}}
           script: |
-            cd cd Mini-Bank-Web/
+            cd Mini-Bank-Web/
             docker-compose down
             docker-compose up --build
