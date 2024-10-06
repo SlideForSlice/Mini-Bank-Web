@@ -33,12 +33,11 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/login", "auth/registration", "auth/registration/details",
-                                "/error").permitAll()
-                        .requestMatchers("/bank-account-service/**", "/card-service/**",
+                        .requestMatchers("/auth/login", "auth/registration", "/error").permitAll()
+                        .requestMatchers("auth/registration/details", "/bank-account-service/**", "/card-service/**",
                                 "/credit-service/**", "/deposit-service/**", "user-service/**")
                         .hasAnyRole("USER")
-                                .anyRequest().permitAll()
+                                .anyRequest().authenticated()
                 )
                 .formLogin(formLogin -> formLogin
                         .loginPage("/auth/login")
