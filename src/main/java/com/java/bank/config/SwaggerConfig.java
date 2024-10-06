@@ -27,7 +27,7 @@ public class SwaggerConfig {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.java.bank.controllers"))
+                .apis(RequestHandlerSelectors.basePackage("com.java.bank"))
                 .paths(PathSelectors.any())
                 .build()
                 .securitySchemes(Collections.singletonList(apiKey()))

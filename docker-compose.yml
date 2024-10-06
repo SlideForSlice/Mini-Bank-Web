@@ -45,9 +45,9 @@ services:
     ports:
       - "8081:8080"  # Порт для Swagger UI
     environment:
-      SWAGGER_JSON: /app/swagger.json
+      SWAGGER_JSON: /swagger.json
     volumes:
-      - ./swagger.json:/app/swagger.json
+      - ./bank/path/to/your/swagger.json:/swagger.json
     depends_on:
       - bank-app
 
