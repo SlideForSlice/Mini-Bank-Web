@@ -38,7 +38,7 @@ public class SecurityConfig {
                         .requestMatchers("/bank-account-service/**", "/card-service/**",
                                 "/credit-service/**", "/deposit-service/**", "user-service/**")
                         .hasAnyRole("USER")
-                        .anyRequest().authenticated()
+                                .anyRequest().permitAll()
                 )
                 .formLogin(formLogin -> formLogin
                         .loginPage("/auth/login")
