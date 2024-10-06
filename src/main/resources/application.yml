@@ -1,9 +1,13 @@
 spring:
+
+#DB
   datasource:
     url: jdbc:postgresql://db:5432/bank
 #    url: jdbc:postgresql://localhost:5432/soap_bank_app
+#    url: jdbc:postgresql://localhost:5432/bank
     username: postgres
 #    password: 1234
+ #    password: root
     password: postgres
     driver-class-name: org.postgresql.Driver
 
@@ -12,10 +16,27 @@ spring:
     hibernate.ddl-auto: none
 #    hibernate: update
 
+#Security
   jwt:
     secret: NUGGETS
 
+
+#logs for terminal
   logging:
     level:
       org.springframework.web: DEBUG
       org.hibernate: DEBUG
+
+#Swagger
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+server:
+  port: 8080
+
+springfox:
+  documentation:
+    swagger:
+      v2:
+        path: /api/swagger

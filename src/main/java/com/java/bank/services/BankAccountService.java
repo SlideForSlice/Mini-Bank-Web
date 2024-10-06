@@ -1,10 +1,10 @@
 package com.java.bank.services;
 
 import com.java.bank.controllers.DTO.BankAccountDTO;
-import com.java.bank.repositories.CardRepository;
-import com.java.bank.repositories.UserRepository;
+import com.java.bank.models.Credit;
+import com.java.bank.models.Deposit;
+import com.java.bank.repositories.*;
 import com.java.bank.models.BankAccount;
-import com.java.bank.repositories.BankAccountRepository;
 import com.java.bank.models.Card;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +24,9 @@ public class BankAccountService {
     private final BankAccountRepository bankAccountRepository;
     private final UserRepository userRepository;
     private final CardRepository cardRepository;
-
+    private final DepositRepository depositRepository;
+    private final CreditService creditService;
+    private final CreditRepository creditRepository;
 
 
     public Optional<BankAccount> getBankAccountById(int id) {
@@ -79,6 +81,14 @@ public class BankAccountService {
 
     public List<Card> getAllCards(int id) {
         return cardRepository.findAllByBankAccount(bankAccountRepository.findById(id).get());
+    }
+
+    public List<Deposit> getAllDeposits(int id) {
+        return depositRepository.findAllByBankAccount(bankAccountRepository.findById(id).get());
+    }
+
+    public List<Credit> getAllCredits(int id) {
+        return creditRepository.findAllByBankAccount(bankAccountRepository.findById(id).get());
     }
 
 

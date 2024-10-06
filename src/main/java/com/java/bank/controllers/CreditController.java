@@ -17,13 +17,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RequestMapping("/credit-service")
 @RestController
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@Api(value = "Credit Service API", tags = {"Credit Service"})
 public class CreditController {
 
     private final CreditService creditService;
@@ -32,30 +40,64 @@ public class CreditController {
     private final CardRepository cardRepository;
 
     @GetMapping()
-    public String getAllCredits(BankAccount idBankAccount) {
+    @ApiOperation(value = "Get all credits for a bank account", response = String.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved credits"),
+            @ApiResponse(code = 404, message = "Bank account not found"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
+    public String getAllCredits(
+            @ApiParam(value = "Bank account to retrieve credits for", required = true)
+            BankAccount idBankAccount) {
         creditService.getCreditsByBankAccount(idBankAccount);
         return "";
     }
 
     @PostMapping("/create")
-    public ResponseEntity<HttpStatus> createCredit(@RequestBody BankAccountIdDTO idBankAccount,
-                            @RequestParam int creditTerm) {
-//        creditTerm = срок кредита в месяцах
+    @ApiOperation(value = "Create a new credit for a bank account", response = ResponseEntity.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Credit created successfully"),
+            @ApiResponse(code = 400, message = "Invalid input data"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
+    public ResponseEntity<HttpStatus> createCredit(
+            @ApiParam(value = "Bank account ID to create credit for", required = true)
+            @RequestBody BankAccountIdDTO idBankAccount,
+            @ApiParam(value = "Credit term in months", required = true)
+            @RequestParam int creditTerm) {
         int id = idBankAccount.getId();
         creditService.createCredit(id, creditTerm);
         return ResponseEntity.ok(HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}/delete")
-    public ResponseEntity<HttpStatus> deleteCredit(@PathVariable int id) {
+    @ApiOperation(value = "Delete a credit by ID", response = ResponseEntity.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Credit deleted successfully"),
+            @ApiResponse(code = 404, message = "Credit not found"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
+    public ResponseEntity<HttpStatus> deleteCredit(
+            @ApiParam(value = "ID of the credit to delete", required = true)
+            @PathVariable int id) {
         creditService.deleteCredit(id);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @PatchMapping("/{id}/cash-in")
-    public Map<String, Float> cashIn(@PathVariable int id,
-                       @RequestParam float amount,
-                       @RequestBody CardTransDTO cardTransDTO) {
+    @ApiOperation(value = "Cash in to a credit from a card", response = Map.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Cash in successful"),
+            @ApiResponse(code = 404, message = "Credit or card not found"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
+    public Map<String, Float> cashIn(
+            @ApiParam(value = "ID of the credit to cash in", required = true)
+            @PathVariable int id,
+            @ApiParam(value = "Amount to cash in", required = true)
+            @RequestParam float amount,
+            @ApiParam(value = "Card details to cash in from", required = true)
+            @RequestBody CardTransDTO cardTransDTO) {
         String cardNumber = mapperForDTO.convertToCard(cardTransDTO).getCardNumber();
         float cardBalance = cardRepository.findByCardNumber(cardNumber).get().getBalance();
         float loanDebt = creditService.getCreditById(id).get().getLoanDebt();
@@ -65,17 +107,25 @@ public class CreditController {
             float newLoanDebt = creditService.getCreditById(id).get().getLoanDebt();
             return Map.of("Credit balance", newLoanDebt,
                     "Card balance", newCardBalance);
-        }
-        else {
+        } else {
             throw new CreditPaidException("Credit paid error");
         }
     }
 
     @PatchMapping("/{id}/cash-out")
-    public Map<String, Float> cashOut(@PathVariable int id,
-                                      @RequestParam float amount,
-                                      @RequestBody CardTransDTO cardTransDTO) {
-
+    @ApiOperation(value = "Cash out from a credit to a card", response = Map.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Cash out successful"),
+            @ApiResponse(code = 404, message = "Credit or card not found"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
+    public Map<String, Float> cashOut(
+            @ApiParam(value = "ID of the credit to cash out", required = true)
+            @PathVariable int id,
+            @ApiParam(value = "Amount to cash out", required = true)
+            @RequestParam float amount,
+            @ApiParam(value = "Card details to cash out to", required = true)
+            @RequestBody CardTransDTO cardTransDTO) {
         String cardNumber = mapperForDTO.convertToCard(cardTransDTO).getCardNumber();
         creditService.cashOutFromCreditToCard(id, amount, cardNumber);
         float cardBalance = cardRepository.findByCardNumber(cardNumber).get().getBalance();
@@ -85,7 +135,11 @@ public class CreditController {
     }
 
     @ExceptionHandler
-    private ResponseEntity<CreditErrorResponse> handleException(CreditPaidException e) {
+    @ApiOperation(value = "Handle CreditPaidException", response = CreditErrorResponse.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Credit already paid")
+    })
+    public ResponseEntity<CreditErrorResponse> handleException(CreditPaidException e) {
         CreditErrorResponse response = new CreditErrorResponse(
                 "Credit already paid!",
                 System.currentTimeMillis()
