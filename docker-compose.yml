@@ -39,17 +39,17 @@ services:
     depends_on:
       - bank-app
 
-#  swagger-ui:
-#    image: swaggerapi/swagger-ui
-#    container_name: swagger-ui
-#    ports:
-#      - "8081:8080"  # Порт для Swagger UI
-#    environment:
-#      SWAGGER_JSON: /app/swagger.json
-#    volumes:
-#      - ./swagger.json:/app/swagger.json
-#    depends_on:
-#      - bank-app
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: swagger-ui
+    ports:
+      - "8081:8080"  # Порт для Swagger UI
+    environment:
+      SWAGGER_JSON: /app/swagger.json
+    volumes:
+      - ./swagger.json:/app/swagger.json
+    depends_on:
+      - bank-app
 
 volumes:
   db_data:
