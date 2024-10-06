@@ -38,12 +38,12 @@ public class SwaggerConfig {
 
     private SecurityContext securityContext() {
         List<Predicate<String>> pathPredicates = Arrays.asList(
-                PathSelectors.regex("/auth/*"),
+                PathSelectors.regex("/auth/.*"),
                 PathSelectors.regex("/bank-account-service/.*"),
                 PathSelectors.regex("/card-service/.*"),
                 PathSelectors.regex("/credit-service/.*"),
                 PathSelectors.regex("/deposit-service/.*"),
-                PathSelectors.regex("/user-service.*")
+                PathSelectors.regex("/user-service/.*")
         );
 
         Predicate<String> combinedPathPredicate = pathPredicates.stream()

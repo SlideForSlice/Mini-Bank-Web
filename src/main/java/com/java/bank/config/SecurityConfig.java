@@ -34,9 +34,12 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/login", "auth/registration", "auth/registration/details",
-                                "/error", "/api/**", "/api/swagger/**", "/swagger-ui/**").permitAll()
+                                "/error").permitAll()
+                        .requestMatchers("/api/swagger/**", "/swagger-ui/**", "/v2/api-docs",
+                                "/swagger-resources/**").permitAll()
                         .requestMatchers("/bank-account-service/**", "/card-service/**",
-                                "/credit-service/**", "/deposit-service/**").hasAnyRole("USER")
+                                "/credit-service/**", "/deposit-service/**", "user-service/**")
+                        .hasAnyRole("USER")
                         .anyRequest().authenticated()
                 )
                 .formLogin(formLogin -> formLogin
