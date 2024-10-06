@@ -13,10 +13,13 @@ import com.java.bank.utils.BankAccountValidator;
 import com.java.bank.utils.MapperForDTO;
 import com.java.bank.utils.UserErrorResponse;
 import com.java.bank.utils.UserValidator;
-import io.swagger.annotations.*;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,11 +31,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-
 @RestController
 @RequestMapping("/auth")
-@RequiredArgsConstructor()
-@Api(value = "User Registration API", tags = {"User Registration and authentication"})
+@RequiredArgsConstructor
+@Tag(name = "User Registration API", description = "User Registration and authentication")
 public class AuthController {
 
     private final RegistrationService registrationService;
@@ -44,27 +46,14 @@ public class AuthController {
     private final BankAccountService bankAccountService;
     private final UserRepository userRepository;
 
-
-//    @GetMapping("/login")
-//    public String login() {
-//        return "auth/login";
-//    }
-//
-//    @GetMapping("/registration")
-//    public String registration() {
-//        return ("auth/registration");
-//    }
-
-
     @PostMapping("/registration")
-    @ApiOperation(value = "Регистрация юзера через логин и пароль", response = Map.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully registered user"),
-            @ApiResponse(code = 400, message = "Invalid input data"),
-            @ApiResponse(code = 500, message = "Internal server error")
+    @Operation(summary = "Регистрация юзера через логин и пароль", responses = {
+            @ApiResponse(responseCode = "200", description = "Successfully registered user"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     public Map<String, String> performRegistrationUserCreds(
-            @ApiParam(value = "User data for registration (username + password)", required = true)
+            @Parameter(description = "User data for registration (username + password)", required = true)
             @RequestBody @Valid UserDTO userDTO,
             BindingResult bindingResult
     ) {
@@ -84,15 +73,14 @@ public class AuthController {
     }
 
     @PostMapping("/registration/details")
-    @ApiOperation(value = "Добавление банковских деталей пользователя", response = ResponseEntity.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Bank account details added successfully"),
-            @ApiResponse(code = 400, message = "Invalid input data"),
-            @ApiResponse(code = 401, message = "Unauthorized"),
-            @ApiResponse(code = 500, message = "Internal server error")
+    @Operation(summary = "Добавление банковских деталей пользователя", responses = {
+            @ApiResponse(responseCode = "201", description = "Bank account details added successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     public ResponseEntity<HttpStatus> performRegistrationBankAccDetails(
-            @ApiParam(value = "Bank account details", required = true)
+            @Parameter(description = "Bank account details", required = true)
             @RequestBody @Valid BankAccountDTO bankAccountDTO,
             BindingResult bindingResult,
             @RequestHeader("Authorization") String token) {
@@ -105,7 +93,6 @@ public class AuthController {
         System.out.println("Received Token: " + jwtToken);
         int id = jwtUtil.extractUserId(jwtToken);
         System.out.println("Extracted User ID: " + id);
-
 
         User user = userRepository.findById(id);
         if (user == null) {
@@ -126,19 +113,16 @@ public class AuthController {
         return ResponseEntity.ok(HttpStatus.CREATED);
     }
 
-
     @PostMapping("/login")
-    @ApiOperation(value = "Authenticate user and generate JWT token", response = Map.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully authenticated"),
-            @ApiResponse(code = 400, message = "Invalid input data"),
-            @ApiResponse(code = 401, message = "Unauthorized"),
-            @ApiResponse(code = 500, message = "Internal server error")
+    @Operation(summary = "Authenticate user and generate JWT token", responses = {
+            @ApiResponse(responseCode = "200", description = "Successfully authenticated"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     public Map<String, String> performLogin(
-            @ApiParam(value = "User credentials (username + password)", required = true)
-            @RequestBody UserDTO userDTO)
-    {
+            @Parameter(description = "User credentials (username + password)", required = true)
+            @RequestBody UserDTO userDTO) {
         UsernamePasswordAuthenticationToken authToken =
                 new UsernamePasswordAuthenticationToken(userDTO.getUsername(), userDTO.getPassword());
         try {
@@ -158,5 +142,4 @@ public class AuthController {
         );
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
-
 }
