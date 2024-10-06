@@ -31,7 +31,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
-@RequiredArgsConstructor()
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @Api(value = "User Registration API", tags = {"User Registration and authentication"})
 public class AuthController {
 
