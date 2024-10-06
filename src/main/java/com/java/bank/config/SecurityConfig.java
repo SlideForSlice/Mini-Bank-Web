@@ -35,8 +35,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/login", "auth/registration", "auth/registration/details",
                                 "/error").permitAll()
-                        .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**",
-                                "/webjars/**").permitAll()
+                        .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/api/swagger/**",
+                                "/webjars/**", "/api/**").permitAll()
                         .requestMatchers("/bank-account-service/**", "/card-service/**",
                                 "/credit-service/**", "/deposit-service/**", "user-service/**")
                         .hasAnyRole("USER")
