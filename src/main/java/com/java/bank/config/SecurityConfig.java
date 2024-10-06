@@ -34,7 +34,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/login", "auth/registration", "auth/registration/details",
-                                "/error").permitAll()
+                                "/error", "/api/swagger/**").permitAll()
                         .requestMatchers("/bank-account-service/**", "/card-service/**",
                                 "/credit-service/**", "/deposit-service/**").hasAnyRole("USER")
                         .anyRequest().authenticated()
