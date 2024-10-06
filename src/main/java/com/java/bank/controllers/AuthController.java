@@ -45,15 +45,15 @@ public class AuthController {
     private final UserRepository userRepository;
 
 
-//    @GetMapping("/login")
-//    public String login() {
-//        return "auth/login";
-//    }
-//
-//    @GetMapping("/registration")
-//    public String registration() {
-//        return ("auth/registration");
-//    }
+    @GetMapping("/login")
+    public String login() {
+        return "auth/login";
+    }
+
+    @GetMapping("/registration")
+    public String registration() {
+        return ("auth/registration");
+    }
 
 
     @PostMapping("/registration")
