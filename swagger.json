@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "title": "API Title"
   },
-  "host": "localhost:8080",
+  "host": "89.110.92.120:8080",
   "basePath": "/",
   "schemes": [
     "http"
