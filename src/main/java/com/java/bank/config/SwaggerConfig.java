@@ -27,25 +27,21 @@ public class SwaggerConfig {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.java.bank"))
+                .apis(RequestHandlerSelectors.basePackage("com.java.bank.controllers"))
                 .paths(PathSelectors.any())
                 .build()
                 .securitySchemes(Collections.singletonList(apiKey()))
                 .securityContexts(Collections.singletonList(securityContext()));
     }
 
-    private ApiKey apiKey() {
-        return new ApiKey("JWT", "Authorization", "header");
-    }
-
     private SecurityContext securityContext() {
         List<Predicate<String>> pathPredicates = Arrays.asList(
-                PathSelectors.regex("/auth/.*"),
-                PathSelectors.regex("/bank-account-service/.*"),
-                PathSelectors.regex("/card-service/.*"),
-                PathSelectors.regex("/credit-service/.*"),
-                PathSelectors.regex("/deposit-service/.*"),
-                PathSelectors.regex("/user-service/.*")
+                PathSelectors.ant("/auth/**"),
+                PathSelectors.ant("/bank-account-service/**"),
+                PathSelectors.ant("/card-service/**"),
+                PathSelectors.ant("/credit-service/**"),
+                PathSelectors.ant("/deposit-service/**"),
+                PathSelectors.ant("/user-service/**")
         );
 
         Predicate<String> combinedPathPredicate = pathPredicates.stream()
@@ -62,7 +58,11 @@ public class SwaggerConfig {
         AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
         authorizationScopes[0] = authorizationScope;
-        return Collections.singletonList(new SecurityReference("JWT", authorizationScopes));
+        return Arrays.asList(new SecurityReference("JWT", authorizationScopes));
+    }
+
+    private ApiKey apiKey() {
+        return new ApiKey("JWT", "Authorization", "header");
     }
 
 
