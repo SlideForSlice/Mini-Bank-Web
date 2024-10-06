@@ -39,7 +39,7 @@ public class DepositService {
     }
 
     @Transactional
-    public void createDeposit(int idBankAccount, int creditTerm) {
+    public void createDeposit(int idBankAccount, int depositTerm) {
 
         Deposit deposit = new Deposit();
 
@@ -53,7 +53,7 @@ public class DepositService {
         deposit.setBalance(0);
         deposit.setInterest(10);
         deposit.setOpenDate(LocalDate.now());
-        deposit.setEndDate(LocalDate.now().plusMonths(creditTerm));
+        deposit.setEndDate(LocalDate.now().plusMonths(depositTerm));
         deposit.setDepositStatus(DepositStatus.ACTIVE);
         log.info("Create Deposit");
 

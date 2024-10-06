@@ -51,8 +51,10 @@ public class DepositController {
     public ResponseEntity<HttpStatus> createDeposit(
             @Parameter(description = "Bank account ID to create deposit for", required = true)
             @RequestBody BankAccountIdDTO idBankAccount,
+
             @Parameter(description = "Deposit term in months", required = true)
             @RequestParam int depositTerm) {
+
         int id = idBankAccount.getId();
         depositService.createDeposit(id, depositTerm);
         return ResponseEntity.ok(HttpStatus.CREATED);
