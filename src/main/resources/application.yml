@@ -4,7 +4,7 @@ spring:
 #    url: jdbc:postgresql://localhost:5432/soap_bank_app
     username: postgres
 #    password: 1234
-    password: postgres
+    password: root
     driver-class-name: org.postgresql.Driver
 
   jpa:
