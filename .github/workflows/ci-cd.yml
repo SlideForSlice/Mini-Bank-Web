@@ -22,4 +22,4 @@ jobs:
           script: |
             cd Mini-Bank-Web/
             docker-compose down
-            docker-compose up --build
+            docker-compose up --build -d
