@@ -23,6 +23,5 @@ jobs:
             docker-compose down
             cd Mini-Bank-Web/
             git pull
-            git fetch
             mvn clean install
             docker-compose up --build -d
