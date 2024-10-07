@@ -20,8 +20,8 @@ jobs:
           username: ${{secrets.SERVER_USERNAME}}
           password: ${{secrets.SERVER_PASSWORD}}
           script: |
-            docker-compose down
             cd Mini-Bank-Web/
+            docker-compose down
             git pull
             mvn clean install
             docker-compose up --build -d
