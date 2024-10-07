@@ -13,7 +13,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Build Docker-compose and deploy to server
+    - name: Deploy to server
       uses: appleboy/ssh-action@master
       with: 
           host: ${{secrets.SERVER_HOST}}
