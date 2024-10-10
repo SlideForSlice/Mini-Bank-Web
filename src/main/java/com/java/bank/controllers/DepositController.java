@@ -54,8 +54,10 @@ public class DepositController {
             @RequestHeader("Authorization") String token,
             @Parameter(description = "Deposit term in months", required = true)
             @RequestParam int depositTerm) {
-
-        int id = jwtUtil.extractBankAccountId(token);
+        if (token == null || token.isEmpty()) {
+            throw new IllegalArgumentException("Token is not provided");
+        }
+        int id = jwtUtil.extractBankAccountId(token.replace("Bearer ", ""));
         depositService.createDeposit(id, depositTerm);
         return ResponseEntity.ok(HttpStatus.CREATED);
     }

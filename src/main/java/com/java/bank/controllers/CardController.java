@@ -51,7 +51,10 @@ public class CardController {
     public ResponseEntity<HttpStatus> createCard(
             @Parameter(description = "Bank account ID to create card for", required = true)
             @RequestHeader("Authorization") String token) {
-        int id = jwtUtil.extractBankAccountId(token);
+        if (token == null || token.isEmpty()) {
+            throw new IllegalArgumentException("Token is not provided");
+        }
+        int id = jwtUtil.extractBankAccountId(token.replace("Bearer ", ""));
         cardService.createCard(id);
         return ResponseEntity.ok(HttpStatus.CREATED);
     }
