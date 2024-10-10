@@ -20,8 +20,6 @@ jobs:
           username: ${{secrets.SERVER_USERNAME}}
           password: ${{secrets.SERVER_PASSWORD}}
           script: |
-            cd Mini-Bank-Web/
-            docker-compose down
-            git pull
+
 
             
