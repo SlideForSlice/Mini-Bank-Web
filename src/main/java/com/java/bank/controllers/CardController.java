@@ -34,11 +34,9 @@ public class CardController {
 
     @GetMapping()
     @Operation(summary = "Get all cards for a bank account", responses = {@ApiResponse(responseCode = "200", description = "Successfully retrieved cards"), @ApiResponse(responseCode = "404", description = "Bank account not found"), @ApiResponse(responseCode = "500", description = "Internal server error")})
-    public String getAllCards(
+    public Optional<Card> getAllCards(
             @RequestHeader("Authorization") String token) {
-
-        cardService.getAllCardsByBankAccount(jwtUtil.extractBankAccountId(token.replace("Bearer ", "")));
-        return "/card-service/index";
+        return cardService.getAllCardsByBankAccount(jwtUtil.extractBankAccountId(token.replace("Bearer ", "")));
     }
 
     @PostMapping("/create")
