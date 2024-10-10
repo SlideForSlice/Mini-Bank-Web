@@ -51,7 +51,8 @@ public class CardController {
         if (token == null || token.isEmpty()) {
             throw new IllegalArgumentException("Token is not provided");
         }
-        int id = jwtUtil.extractBankAccountId(token.replace("Bearer ", ""));
+        String cleanedToken = token.replace("Bearer ", "");
+        int id = jwtUtil.extractBankAccountId(cleanedToken);
         cardService.createCard(id);
         return ResponseEntity.ok(HttpStatus.CREATED);
     }

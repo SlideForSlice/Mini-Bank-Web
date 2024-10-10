@@ -18,7 +18,7 @@ import java.util.List;
 @Setter
 @Table(name="bank_account")
 @RequiredArgsConstructor
-public class BankAccount implements Serializable {
+public class BankAccount{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
