@@ -35,7 +35,6 @@ public class CardController {
     @GetMapping()
     @Operation(summary = "Get all cards for a bank account", responses = {@ApiResponse(responseCode = "200", description = "Successfully retrieved cards"), @ApiResponse(responseCode = "404", description = "Bank account not found"), @ApiResponse(responseCode = "500", description = "Internal server error")})
     public String getAllCards(
-            @Parameter(description = "Bank account to retrieve cards for", required = true)
             @RequestHeader("Authorization") String token) {
 
         cardService.getAllCardsByBankAccount(jwtUtil.extractBankAccountId(token.replace("Bearer ", "")));
