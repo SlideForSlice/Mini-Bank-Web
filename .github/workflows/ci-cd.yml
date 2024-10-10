@@ -1,9 +1,9 @@
 name: CI/CD Pipeline
 
-on:
-  push:
-    branches:
-      - main
+# on:
+#   push:
+#     branches:
+#       - main
 
 jobs:
   build-and-deploy:
@@ -19,7 +19,12 @@ jobs:
           host: ${{secrets.SERVER_HOST}}
           username: ${{secrets.SERVER_USERNAME}}
           password: ${{secrets.SERVER_PASSWORD}}
-          script: |
+          port: 22
+          script: | 
+            cd /Mini-bank-web
+            sudo docker-compose down
+            mvn clean install
+            sudo docker-compose down -d
 
 
             
