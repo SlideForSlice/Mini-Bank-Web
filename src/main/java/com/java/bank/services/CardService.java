@@ -50,7 +50,7 @@ public class CardService {
 
 
     @Transactional
-    public void createCard(int idBankAccount) {
+    public Card createCard(int idBankAccount) {
 
         Card card = new Card();
 
@@ -68,7 +68,7 @@ public class CardService {
         log.info("Create Card");
 
         cardRepository.save(card);
-
+        return card;
     }
 
     @Transactional

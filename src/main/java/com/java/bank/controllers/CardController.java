@@ -40,13 +40,13 @@ public class CardController {
 
     @PostMapping("/create")
     @Operation(summary = "Create a new card for a bank account", responses = {@ApiResponse(responseCode = "201", description = "Card created successfully"), @ApiResponse(responseCode = "400", description = "Invalid input data"), @ApiResponse(responseCode = "500", description = "Internal server error")})
-    public ResponseEntity<HttpStatus> createCard(
+    public ResponseEntity<Card> createCard(
             @RequestHeader("Authorization") String token) {
         if (token == null || token.isEmpty()) {
             throw new IllegalArgumentException("Token is not provided");
         }
-        cardService.createCard(jwtUtil.extractBankAccountId(token.replace("Bearer ", "")));
-        return ResponseEntity.ok(HttpStatus.CREATED);
+        Card card = cardService.createCard(jwtUtil.extractBankAccountId(token.replace("Bearer ", "")));
+        return ResponseEntity.status(HttpStatus.CREATED).body(card);
     }
 
     @DeleteMapping("/{id}/delete")
