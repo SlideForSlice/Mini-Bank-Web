@@ -1,11 +1,8 @@
 package com.java.bank.services;
 
 import com.java.bank.controllers.DTO.BankAccountDTO;
-import com.java.bank.models.Credit;
-import com.java.bank.models.Deposit;
+import com.java.bank.models.*;
 import com.java.bank.repositories.*;
-import com.java.bank.models.BankAccount;
-import com.java.bank.models.Card;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +22,10 @@ public class BankAccountService {
     private final UserRepository userRepository;
     private final CardRepository cardRepository;
     private final DepositRepository depositRepository;
-    private final CreditService creditService;
     private final CreditRepository creditRepository;
 
 
     public Optional<BankAccount> getBankAccountById(int id) {
-
         return bankAccountRepository.findById(id);
     }
 
@@ -93,7 +88,8 @@ public class BankAccountService {
 
     public int findBankAccountIdByUserId(int userId) {
         // Предположим, что у вас есть метод в репозитории, который возвращает банковский аккаунт по userId
-        BankAccount bankAccount = bankAccountRepository.findByUserId(userId);
+        User user = userRepository.findById(userId);
+        BankAccount bankAccount = bankAccountRepository.findByUserId(user);
         if (bankAccount == null) {
             throw new RuntimeException("Bank account not found for user ID: " + userId);
         }
