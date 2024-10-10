@@ -48,13 +48,11 @@ public class DepositController {
     @Operation(summary = "Create a new deposit for a bank account", responses = {@ApiResponse(responseCode = "201", description = "Deposit created successfully"), @ApiResponse(responseCode = "400", description = "Invalid input data"), @ApiResponse(responseCode = "500", description = "Internal server error")})
     public ResponseEntity<HttpStatus> createDeposit(
             @RequestHeader("Authorization") String token,
-            @Parameter(description = "Deposit term in months", required = true)
-            @RequestParam int depositTerm) {
+            @Parameter(description = "Deposit term in months", required = true) @RequestParam int depositTerm) {
         if (token == null || token.isEmpty()) {
             throw new IllegalArgumentException("Token is not provided");
         }
-        int id = jwtUtil.extractBankAccountId(token.replace("Bearer ", ""));
-        depositService.createDeposit(id, depositTerm);
+        depositService.createDeposit(jwtUtil.extractBankAccountId(token.replace("Bearer ", "")), depositTerm);
         return ResponseEntity.ok(HttpStatus.CREATED);
     }
 
@@ -68,18 +66,12 @@ public class DepositController {
     }
 
     @PatchMapping("/{id}/cash-in")
-    @Operation(summary = "Cash in to a deposit from a card", responses = {
-            @ApiResponse(responseCode = "200", description = "Cash in successful"),
-            @ApiResponse(responseCode = "404", description = "Deposit or card not found"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
-    })
+    @Operation(summary = "Cash in to a deposit from a card", responses = {@ApiResponse(responseCode = "200", description = "Cash in successful"), @ApiResponse(responseCode = "404", description = "Deposit or card not found"), @ApiResponse(responseCode = "500", description = "Internal server error")})
     public Map<String, Float> cashIn(
-            @Parameter(description = "ID of the deposit to cash in", required = true)
-            @PathVariable int id,
-            @Parameter(description = "Amount to cash in", required = true)
-            @RequestParam float amount,
-            @Parameter(description = "Card details to cash in from", required = true)
-            @RequestBody CardTransDTO cardTransDTO) {
+            @Parameter(description = "ID of the deposit to cash in", required = true) @PathVariable int id,
+            @Parameter(description = "Amount to cash in", required = true) @RequestParam float amount,
+            @Parameter(description = "Card details to cash in from", required = true) @RequestBody CardTransDTO cardTransDTO)
+    {
         String cardNumber = mapperForDTO.convertToCard(cardTransDTO).getCardNumber();
         float cardBalance = cardRepository.findByCardNumber(cardNumber).get().getBalance();
         if (cardBalance >= amount) {
@@ -94,18 +86,11 @@ public class DepositController {
     }
 
     @PatchMapping("/{id}/cash-out")
-    @Operation(summary = "Cash out from a deposit to a card", responses = {
-            @ApiResponse(responseCode = "200", description = "Cash out successful"),
-            @ApiResponse(responseCode = "404", description = "Deposit or card not found"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
-    })
+    @Operation(summary = "Cash out from a deposit to a card", responses = {@ApiResponse(responseCode = "200", description = "Cash out successful"), @ApiResponse(responseCode = "404", description = "Deposit or card not found"), @ApiResponse(responseCode = "500", description = "Internal server error")})
     public Map<String, Float> cashOut(
-            @Parameter(description = "ID of the deposit to cash out", required = true)
-            @PathVariable int id,
-            @Parameter(description = "Amount to cash out", required = true)
-            @RequestParam float amount,
-            @Parameter(description = "Card details to cash out to", required = true)
-            @RequestBody CardTransDTO cardTransDTO) {
+            @Parameter(description = "ID of the deposit to cash out", required = true) @PathVariable int id,
+            @Parameter(description = "Amount to cash out", required = true) @RequestParam float amount,
+            @Parameter(description = "Card details to cash out to", required = true) @RequestBody CardTransDTO cardTransDTO) {
         String cardNumber = mapperForDTO.convertToCard(cardTransDTO).getCardNumber();
         float depositBalance = depositService.getDepositById(id).get().getBalance();
         if (depositBalance >= amount) {

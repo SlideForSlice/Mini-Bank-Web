@@ -62,8 +62,7 @@ public class CreditController {
         if (token == null || token.isEmpty()) {
             throw new IllegalArgumentException("Token is not provided");
         }
-        int id = jwtUtil.extractBankAccountId(token.replace("Bearer ", ""));
-        creditService.createCredit(id, creditTerm);
+        creditService.createCredit(jwtUtil.extractBankAccountId(token.replace("Bearer ", "")), creditTerm);
         return ResponseEntity.ok(HttpStatus.CREATED);
     }
 

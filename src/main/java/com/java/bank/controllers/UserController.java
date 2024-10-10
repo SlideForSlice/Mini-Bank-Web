@@ -20,26 +20,16 @@ public class UserController {
     private final UserService userService;
 
     @PatchMapping("/{id}/update-password")
-    @Operation(summary = "Update user password", responses = {
-            @ApiResponse(responseCode = "200", description = "Password updated successfully"),
-            @ApiResponse(responseCode = "404", description = "User not found"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
-    })
+    @Operation(summary = "Update user password", responses = {@ApiResponse(responseCode = "200", description = "Password updated successfully"), @ApiResponse(responseCode = "404", description = "User not found"), @ApiResponse(responseCode = "500", description = "Internal server error")})
     public ResponseEntity<HttpStatus> updatePassword(
-            @Parameter(description = "New password", required = true)
-            @RequestBody PasswordDTO passwordDTO,
-            @Parameter(description = "User ID", required = true)
-            @PathVariable int id) {
+            @Parameter(description = "New password", required = true) @RequestBody PasswordDTO passwordDTO,
+            @Parameter(description = "User ID", required = true) @PathVariable int id) {
         userService.updatePassword(id, passwordDTO.getPassword());
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}/delete")
-    @Operation(summary = "Delete user by ID", responses = {
-            @ApiResponse(responseCode = "200", description = "User deleted successfully"),
-            @ApiResponse(responseCode = "404", description = "User not found"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
-    })
+    @Operation(summary = "Delete user by ID", responses = {@ApiResponse(responseCode = "200", description = "User deleted successfully"), @ApiResponse(responseCode = "404", description = "User not found"), @ApiResponse(responseCode = "500", description = "Internal server error")})
     public ResponseEntity<HttpStatus> deleteUser(
             @Parameter(description = "User ID", required = true)
             @PathVariable int id) {
