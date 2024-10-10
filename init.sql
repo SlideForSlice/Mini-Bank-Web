@@ -31,7 +31,7 @@ create table credit(
                        bank_account int references bank_account(id) on delete cascade,
                        credit_num varchar(24) unique not null,
                        loan_debt decimal(10,2),
-                       interest decimal(2,1) not null,
+                       interest decimal(3,1) not null,
                        open_date date not null ,
                        end_date date not null,
                        Status VARCHAR(10)
@@ -42,7 +42,7 @@ create table deposit(
                         bank_account int references bank_account(id) on delete cascade,
                         deposit_num varchar(24) unique not null,
                         balance decimal(10,2),
-                        interest decimal(2,1) not null,
+                        interest decimal(3,1) not null,
                         open_date date not null,
                         end_date timestamp not null,
                         Status VARCHAR(10) not null
