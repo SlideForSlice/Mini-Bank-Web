@@ -23,7 +23,7 @@ jobs:
           password: ${{secrets.SERVER_PASSWORD}}
           port: 22
           script: | 
-            cd Mini-bank-web || { echo "Failed to change directory to /Mini-bank-web"; exit 1; }
+            cd Mini-Bank-Web/ || { echo "Failed to change directory to /Mini-bank-web"; exit 1; }
             sudo docker-compose down || { echo "Failed to stop and remove containers"; exit 1; }
             mvn clean install || { echo "Failed to run mvn clean install"; exit 1; }
             sudo docker-compose build || { echo "Failed to build containers"; exit 1; }
