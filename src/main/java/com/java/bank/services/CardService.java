@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,11 +37,15 @@ public class CardService {
         return cardRepository.findAll();
     }
 
-    public Optional<Card> getAllCardsByBankAccount(int idBankAccount) {
-        log.info("Get Card by bank account:");
+    public List<Card> getAllCardsByBankAccount(int idBankAccount) {
         Optional<BankAccount> bankAccount = bankAccountRepository.findById(idBankAccount);
-        Optional<Card> cards = cardRepository.findByBankAccount(bankAccount.get());
-        return cards;
+
+        if (bankAccount.isPresent()) {
+            return cardRepository.findAllByBankAccount(bankAccount.get());
+        } else {
+            log.warn("Bank account not found for ID: {}", idBankAccount);
+            return Collections.emptyList();
+        }
     }
 
 

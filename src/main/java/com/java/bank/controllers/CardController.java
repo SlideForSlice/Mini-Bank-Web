@@ -1,8 +1,6 @@
 package com.java.bank.controllers;
 
-import com.java.bank.controllers.DTO.BankAccountIdDTO;
 import com.java.bank.controllers.DTO.CardTransDTO;
-import com.java.bank.models.BankAccount;
 import com.java.bank.models.Card;
 import com.java.bank.security.JWTUtil;
 import com.java.bank.services.CardService;
@@ -17,8 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -33,10 +31,11 @@ public class CardController {
     private final JWTUtil jwtUtil;
 
     @GetMapping()
-    @Operation(summary = "Get all cards for a bank account", responses = {@ApiResponse(responseCode = "200", description = "Successfully retrieved cards"), @ApiResponse(responseCode = "404", description = "Bank account not found"), @ApiResponse(responseCode = "500", description = "Internal server error")})
-    public Optional<Card> getAllCards(
+    @Operation(summary = "Get all cards by bank account", security = @SecurityRequirement(name = "JWT"), responses = {@ApiResponse(responseCode = "200", description = "Successfully retrieved cards"), @ApiResponse(responseCode = "404", description = "Bank account not found"), @ApiResponse(responseCode = "500", description = "Internal server error")})
+    public Optional<List<Card>> getAllCards(
             @RequestHeader("Authorization") String token) {
-        return cardService.getAllCardsByBankAccount(jwtUtil.extractBankAccountId(token.replace("Bearer ", "")));
+        List<Card> cards = cardService.getAllCardsByBankAccount(jwtUtil.extractBankAccountId(token.replace("Bearer ", "")));
+        return cards.isEmpty() ? Optional.empty() : Optional.of(cards);
     }
 
     @PostMapping("/create")
