@@ -87,7 +87,6 @@ public class BankAccountService {
     }
 
     public int findBankAccountIdByUserId(int userId) {
-        // Предположим, что у вас есть метод в репозитории, который возвращает банковский аккаунт по userId
         User user = userRepository.findById(userId);
         BankAccount bankAccount = bankAccountRepository.findByUserId(user);
         if (bankAccount == null) {

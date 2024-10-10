@@ -77,8 +77,7 @@ public class JWTUtil {
 
             DecodedJWT jwt = verifier.verify(token);
             int userId = jwt.getClaim("id").asInt();
-            int bankAccountId = bankAccountService.findBankAccountIdByUserId(userId);
-            return bankAccountId;
+            return bankAccountService.findBankAccountIdByUserId(userId);
         } catch (JWTVerificationException e) {
             throw new IllegalArgumentException("Invalid token", e);
         }

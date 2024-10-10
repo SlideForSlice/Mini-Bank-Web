@@ -44,10 +44,7 @@ public class CardController {
     }
 
     @PostMapping("/create")
-    @Operation(summary = "Create a new card for a bank account", responses = {
-            @ApiResponse(responseCode = "201", description = "Card created successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid input data"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")})
+    @Operation(summary = "Create a new card for a bank account", responses = {@ApiResponse(responseCode = "201", description = "Card created successfully"), @ApiResponse(responseCode = "400", description = "Invalid input data"), @ApiResponse(responseCode = "500", description = "Internal server error")})
     public ResponseEntity<HttpStatus> createCard(
             @Parameter(description = "Bank account ID to create card for", required = true)
             @RequestHeader("Authorization") String token) {

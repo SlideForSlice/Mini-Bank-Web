@@ -45,11 +45,7 @@ public class DepositController {
     }
 
     @PostMapping("/create")
-    @Operation(summary = "Create a new deposit for a bank account", responses = {
-            @ApiResponse(responseCode = "201", description = "Deposit created successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid input data"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
-    })
+    @Operation(summary = "Create a new deposit for a bank account", responses = {@ApiResponse(responseCode = "201", description = "Deposit created successfully"), @ApiResponse(responseCode = "400", description = "Invalid input data"), @ApiResponse(responseCode = "500", description = "Internal server error")})
     public ResponseEntity<HttpStatus> createDeposit(
             @RequestHeader("Authorization") String token,
             @Parameter(description = "Deposit term in months", required = true)
@@ -63,11 +59,7 @@ public class DepositController {
     }
 
     @DeleteMapping("/{id}/delete")
-    @Operation(summary = "Delete a deposit by ID", responses = {
-            @ApiResponse(responseCode = "200", description = "Deposit deleted successfully"),
-            @ApiResponse(responseCode = "404", description = "Deposit not found"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
-    })
+    @Operation(summary = "Delete a deposit by ID", responses = {@ApiResponse(responseCode = "200", description = "Deposit deleted successfully"), @ApiResponse(responseCode = "404", description = "Deposit not found"), @ApiResponse(responseCode = "500", description = "Internal server error")})
     public ResponseEntity<HttpStatus> deleteDeposit(
             @Parameter(description = "ID of the deposit to delete", required = true)
             @PathVariable int id) {
