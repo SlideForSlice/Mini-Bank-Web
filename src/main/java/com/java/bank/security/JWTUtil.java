@@ -70,13 +70,7 @@ public class JWTUtil {
 
     public int extractBankAccountId(String token) {
         try {
-            JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secret))
-                    .withSubject("User details")
-                    .withIssuer("admin")
-                    .build();
-
-            DecodedJWT jwt = verifier.verify(token);
-            int userId = jwt.getClaim("id").asInt();
+            int userId = extractUserId(token);
             return bankAccountService.findBankAccountIdByUserId(userId);
         } catch (JWTVerificationException e) {
             throw new IllegalArgumentException("Invalid token", e);
