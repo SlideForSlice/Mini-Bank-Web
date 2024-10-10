@@ -25,6 +25,7 @@ jobs:
           script: | 
             cd Mini-Bank-Web/ || { echo "Failed to change directory to /Mini-bank-web"; exit 1; }
             sudo docker-compose down || { echo "Failed to stop and remove containers"; exit 1; }
+            git pull
             mvn clean install || { echo "Failed to run mvn clean install"; exit 1; }
             sudo docker-compose build || { echo "Failed to build containers"; exit 1; }
             sudo docker-compose up  || { echo "Failed to start containers"; exit 1; }
