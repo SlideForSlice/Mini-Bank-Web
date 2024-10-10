@@ -3,9 +3,9 @@ package com.java.bank.controllers.DTO;
 import lombok.Data;
 
 @Data
-public class UserDTO {
-    private int id;
+public class AuthDTO {
+
     private String username;
     private String password;
-    private String role;
+
 }

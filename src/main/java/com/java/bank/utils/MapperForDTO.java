@@ -3,11 +3,10 @@ package com.java.bank.utils;
 import com.java.bank.controllers.DTO.BankAccountDTO;
 import com.java.bank.controllers.DTO.BankAccountIdDTO;
 import com.java.bank.controllers.DTO.CardTransDTO;
-import com.java.bank.controllers.DTO.UserDTO;
+import com.java.bank.controllers.DTO.AuthDTO;
 import com.java.bank.models.BankAccount;
 import com.java.bank.models.Card;
 import com.java.bank.models.User;
-import jakarta.persistence.Column;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,7 @@ public class MapperForDTO {
         return this.modelMapper.map(bankAccountDTO, BankAccount.class);
     }
 
-    public User convertToUser(UserDTO userDTO) {
+    public User convertToUser(AuthDTO userDTO) {
         return this.modelMapper.map(userDTO, User.class);
     }
 
