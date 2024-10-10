@@ -36,9 +36,10 @@ public class CardService {
         return cardRepository.findAll();
     }
 
-    public Optional<Card> getAllCardsByBankAccount(BankAccount bankAccount) {
-        log.info("Get Card by bank account: " + bankAccount);
-        return cardRepository.findByBankAccount(bankAccount);
+    public Optional<Card> getAllCardsByBankAccount(int idBankAccount) {
+        log.info("Get Card by bank account:");
+        Optional<BankAccount> bankAccount = bankAccountRepository.findById(idBankAccount);
+        return cardRepository.findByBankAccount(bankAccount.get());
     }
 
 

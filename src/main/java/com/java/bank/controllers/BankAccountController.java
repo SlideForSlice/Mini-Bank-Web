@@ -10,6 +10,7 @@ import com.java.bank.utils.MapperForDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @Tag(name = "Bank Account Service API", description = "Bank Account Service")
+@SecurityRequirement(name = "JWT")
 public class BankAccountController {
 
     private final BankAccountService bankAccountService;

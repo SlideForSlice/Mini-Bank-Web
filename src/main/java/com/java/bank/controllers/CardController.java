@@ -10,6 +10,7 @@ import com.java.bank.utils.MapperForDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import java.util.Optional;
 @RestController
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @Tag(name = "Card Service API", description = "Card Service")
+@SecurityRequirement(name = "JWT")
 public class CardController {
     private final CardService cardService;
     private final MapperForDTO mapperForDTO;
@@ -34,8 +36,9 @@ public class CardController {
     @Operation(summary = "Get all cards for a bank account", responses = {@ApiResponse(responseCode = "200", description = "Successfully retrieved cards"), @ApiResponse(responseCode = "404", description = "Bank account not found"), @ApiResponse(responseCode = "500", description = "Internal server error")})
     public String getAllCards(
             @Parameter(description = "Bank account to retrieve cards for", required = true)
-            BankAccount idBankAccount) {
-        cardService.getAllCardsByBankAccount(idBankAccount);
+            @RequestHeader("Authorization") String token) {
+
+        cardService.getAllCardsByBankAccount(jwtUtil.extractBankAccountId(token.replace("Bearer ", "")));
         return "/card-service/index";
     }
 
