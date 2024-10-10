@@ -1,6 +1,5 @@
 package com.java.bank.services;
 
-import com.java.bank.controllers.DTO.BankAccountDTO;
 import com.java.bank.models.*;
 import com.java.bank.repositories.*;
 import lombok.RequiredArgsConstructor;
@@ -88,11 +87,11 @@ public class BankAccountService {
 
     public int findBankAccountIdByUserId(int userId) {
         User user = userRepository.findById(userId);
-        BankAccount bankAccount = bankAccountRepository.findByUserId(user);
-        if (bankAccount == null) {
+        Optional<BankAccount> bankAccount = bankAccountRepository.findByUserId(user);
+        if (bankAccount.isEmpty()) {
             throw new RuntimeException("Bank account not found for user ID: " + userId);
         }
-        return bankAccount.getId();
+        return bankAccount.get().getId();
     }
 
 

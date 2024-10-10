@@ -15,5 +15,5 @@ public interface BankAccountRepository extends JpaRepository<BankAccount, Intege
     Optional<BankAccount> findByPassportNumber(String passportNumber);
     Optional<BankAccount> findByPhoneNumber(String phoneNumber);
     Optional<BankAccount> findByEmail(String email);
-    BankAccount findByUserId(User user);
+    Optional<BankAccount> findByUserId(User user);
 }
