@@ -44,6 +44,6 @@ create table deposit(
                         balance decimal(10,2),
                         interest decimal(3,1) not null,
                         open_date date not null,
-                        end_date timestamp not null,
+                        end_date date not null,
                         Status VARCHAR(10) not null
 );

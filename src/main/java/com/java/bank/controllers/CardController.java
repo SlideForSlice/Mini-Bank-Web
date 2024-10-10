@@ -4,6 +4,7 @@ import com.java.bank.controllers.DTO.BankAccountIdDTO;
 import com.java.bank.controllers.DTO.CardTransDTO;
 import com.java.bank.models.BankAccount;
 import com.java.bank.models.Card;
+import com.java.bank.security.JWTUtil;
 import com.java.bank.services.CardService;
 import com.java.bank.utils.MapperForDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,6 +28,7 @@ import java.util.Optional;
 public class CardController {
     private final CardService cardService;
     private final MapperForDTO mapperForDTO;
+    private final JWTUtil jwtUtil;
 
     @GetMapping()
     @Operation(summary = "Get all cards for a bank account", responses = {
@@ -45,12 +47,11 @@ public class CardController {
     @Operation(summary = "Create a new card for a bank account", responses = {
             @ApiResponse(responseCode = "201", description = "Card created successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid input data"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
-    })
+            @ApiResponse(responseCode = "500", description = "Internal server error")})
     public ResponseEntity<HttpStatus> createCard(
             @Parameter(description = "Bank account ID to create card for", required = true)
-            @RequestBody BankAccountIdDTO idBankAccount) {
-        int id = idBankAccount.getId();
+            @RequestHeader("Authorization") String token) {
+        int id = jwtUtil.extractBankAccountId(token);
         cardService.createCard(id);
         return ResponseEntity.ok(HttpStatus.CREATED);
     }
@@ -59,8 +60,7 @@ public class CardController {
     @Operation(summary = "Delete a card by ID", responses = {
             @ApiResponse(responseCode = "200", description = "Card deleted successfully"),
             @ApiResponse(responseCode = "404", description = "Card not found"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
-    })
+            @ApiResponse(responseCode = "500", description = "Internal server error")})
     public ResponseEntity<HttpStatus> deleteCurrentCard(
             @Parameter(description = "ID of the card to delete", required = true)
             @PathVariable int id) {
@@ -72,8 +72,7 @@ public class CardController {
     @Operation(summary = "Cash in to a card by ID", responses = {
             @ApiResponse(responseCode = "200", description = "Cash in successful"),
             @ApiResponse(responseCode = "404", description = "Card not found"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
-    })
+            @ApiResponse(responseCode = "500", description = "Internal server error")})
     public Map<String, Float> cashIn(
             @Parameter(description = "ID of the card to cash in", required = true)
             @PathVariable int id,
@@ -88,8 +87,7 @@ public class CardController {
     @Operation(summary = "Cash out from a card by ID", responses = {
             @ApiResponse(responseCode = "200", description = "Cash out successful"),
             @ApiResponse(responseCode = "404", description = "Card not found"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
-    })
+            @ApiResponse(responseCode = "500", description = "Internal server error")})
     public Map<String, Float> cashOut(
             @Parameter(description = "ID of the card to cash out", required = true)
             @PathVariable int id,
@@ -104,8 +102,7 @@ public class CardController {
     @Operation(summary = "Send money from one card to another", responses = {
             @ApiResponse(responseCode = "200", description = "Money sent successfully"),
             @ApiResponse(responseCode = "404", description = "Card not found"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
-    })
+            @ApiResponse(responseCode = "500", description = "Internal server error")})
     public Map<String, Float> send(
             @Parameter(description = "ID of the card to send money from", required = true)
             @PathVariable int id,

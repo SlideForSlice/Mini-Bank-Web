@@ -4,6 +4,7 @@ import com.java.bank.controllers.DTO.BankAccountIdDTO;
 import com.java.bank.controllers.DTO.CardTransDTO;
 import com.java.bank.models.BankAccount;
 import com.java.bank.repositories.CardRepository;
+import com.java.bank.security.JWTUtil;
 import com.java.bank.services.CardService;
 import com.java.bank.services.CreditService;
 import com.java.bank.utils.CreditErrorResponse;
@@ -32,6 +33,7 @@ public class CreditController {
     private final MapperForDTO mapperForDTO;
     private final CardService cardService;
     private final CardRepository cardRepository;
+    private final JWTUtil jwtUtil;
 
     @GetMapping()
     @Operation(summary = "Get all credits for a bank account", responses = {
@@ -54,10 +56,10 @@ public class CreditController {
     })
     public ResponseEntity<HttpStatus> createCredit(
             @Parameter(description = "Bank account ID to create credit for", required = true)
-            @RequestBody BankAccountIdDTO idBankAccount,
+            @RequestHeader("Authorization") String token,
             @Parameter(description = "Credit term in months", required = true)
             @RequestParam int creditTerm) {
-        int id = idBankAccount.getId();
+        int id = jwtUtil.extractBankAccountId(token);
         creditService.createCredit(id, creditTerm);
         return ResponseEntity.ok(HttpStatus.CREATED);
     }

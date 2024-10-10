@@ -91,5 +91,14 @@ public class BankAccountService {
         return creditRepository.findAllByBankAccount(bankAccountRepository.findById(id).get());
     }
 
+    public int findBankAccountIdByUserId(int userId) {
+        // Предположим, что у вас есть метод в репозитории, который возвращает банковский аккаунт по userId
+        BankAccount bankAccount = bankAccountRepository.findByUserId(userId);
+        if (bankAccount == null) {
+            throw new RuntimeException("Bank account not found for user ID: " + userId);
+        }
+        return bankAccount.getId();
+    }
+
 
 }

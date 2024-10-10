@@ -4,6 +4,7 @@ import com.java.bank.controllers.DTO.BankAccountIdDTO;
 import com.java.bank.controllers.DTO.CardTransDTO;
 import com.java.bank.models.BankAccount;
 import com.java.bank.repositories.CardRepository;
+import com.java.bank.security.JWTUtil;
 import com.java.bank.services.DepositService;
 import com.java.bank.utils.MapperForDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,6 +29,7 @@ public class DepositController {
     private final DepositService depositService;
     private final MapperForDTO mapperForDTO;
     private final CardRepository cardRepository;
+    private final JWTUtil jwtUtil;
 
     @GetMapping
     @Operation(summary = "Get all deposits for a bank account", responses = {
@@ -49,13 +51,11 @@ public class DepositController {
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     public ResponseEntity<HttpStatus> createDeposit(
-            @Parameter(description = "Bank account ID to create deposit for", required = true)
-            @RequestBody BankAccountIdDTO idBankAccount,
-
+            @RequestHeader("Authorization") String token,
             @Parameter(description = "Deposit term in months", required = true)
             @RequestParam int depositTerm) {
 
-        int id = idBankAccount.getId();
+        int id = jwtUtil.extractBankAccountId(token);
         depositService.createDeposit(id, depositTerm);
         return ResponseEntity.ok(HttpStatus.CREATED);
     }

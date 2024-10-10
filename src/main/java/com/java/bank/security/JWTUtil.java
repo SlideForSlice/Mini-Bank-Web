@@ -1,6 +1,11 @@
 package com.java.bank.security;
 
 import com.java.bank.models.User;
+import com.java.bank.repositories.BankAccountRepository;
+import com.java.bank.repositories.UserRepository;
+import com.java.bank.services.BankAccountService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.stereotype.Component;
@@ -16,7 +21,10 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 
 
 @Component
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class JWTUtil {
+
+    private final BankAccountService bankAccountService;
 
     @Value("${spring.jwt.secret}")
     private String secret;
@@ -56,6 +64,22 @@ public class JWTUtil {
             return jwt.getClaim("id").asInt();
         } catch (JWTVerificationException e) {
             // Логирование или обработка ошибки верификации
+            throw new IllegalArgumentException("Invalid token", e);
+        }
+    }
+
+    public int extractBankAccountId(String token) {
+        try {
+            JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secret))
+                    .withSubject("User details")
+                    .withIssuer("admin")
+                    .build();
+
+            DecodedJWT jwt = verifier.verify(token);
+            int userId = jwt.getClaim("id").asInt();
+            int bankAccountId = bankAccountService.findBankAccountIdByUserId(userId);
+            return bankAccountId;
+        } catch (JWTVerificationException e) {
             throw new IllegalArgumentException("Invalid token", e);
         }
     }
