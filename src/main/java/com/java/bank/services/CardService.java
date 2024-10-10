@@ -39,7 +39,8 @@ public class CardService {
     public Optional<Card> getAllCardsByBankAccount(int idBankAccount) {
         log.info("Get Card by bank account:");
         Optional<BankAccount> bankAccount = bankAccountRepository.findById(idBankAccount);
-        return cardRepository.findByBankAccount(bankAccount.get());
+        Optional<Card> cards = cardRepository.findByBankAccount(bankAccount.get());
+        return cards;
     }
 
 
