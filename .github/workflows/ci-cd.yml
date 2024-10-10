@@ -24,4 +24,4 @@ jobs:
             docker-compose down
             git pull
             mvn clean install
-            docker-compose up --build -d
+            
