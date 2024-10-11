@@ -5,6 +5,7 @@ import com.java.bank.models.BankAccount;
 import com.java.bank.models.Card;
 import com.java.bank.models.Credit;
 import com.java.bank.models.Deposit;
+import com.java.bank.security.JWTUtil;
 import com.java.bank.services.BankAccountService;
 import com.java.bank.utils.MapperForDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,55 +34,60 @@ public class BankAccountController {
 
     private final BankAccountService bankAccountService;
     private final MapperForDTO mapper;
+    private final JWTUtil jwtUtil;
 
-    @GetMapping("/{id}")
+    @GetMapping()
     @Operation(summary = "Get bank account by ID", responses = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved bank account"), @ApiResponse(responseCode = "404", description = "Bank account not found"), @ApiResponse(responseCode = "500", description = "Internal server error")})
     public BankAccountDTO getBankAccount(
-            @Parameter(description = "ID of the bank account to retrieve", required = true) @PathVariable int id) {
+            @Parameter(description = "Enter token to retrieve bank account id", required = true)
+            @RequestHeader("Authorization") String token) {
+        int id = jwtUtil.extractBankAccountId(token.replace("Bearer ", ""));
         return mapper.convertToBankAccountDTO(bankAccountService.getBankAccountById(id).orElse(null));
     }
 
-    @PatchMapping("/{id}/update")
+    @PatchMapping("/update")
     @Operation(summary = "Update bank account by ID", responses = {@ApiResponse(responseCode = "201", description = "Bank account updated successfully"), @ApiResponse(responseCode = "404", description = "Bank account not found"), @ApiResponse(responseCode = "500", description = "Internal server error")})
-    public ResponseEntity<HttpStatus> updateBankAccount(
-            @Parameter(description = "ID of the bank account to update", required = true) @PathVariable int id,
+    public ResponseEntity<BankAccount> updateBankAccount(
+            @Parameter(description = "ID of the bank account to update", required = true) @RequestHeader("Authorization") String token,
             @Parameter(description = "Updated bank account details", required = true) @RequestBody BankAccount bankAccountUpdated) {
+        int id = jwtUtil.extractBankAccountId(token.replace("Bearer ", ""));
         bankAccountService.updateBankAccount(id, bankAccountUpdated);
-        return ResponseEntity.ok(HttpStatus.CREATED);
+        BankAccount updatedBankAccount = bankAccountService.getBankAccountById(id).orElse(null);
+        return ResponseEntity.status(HttpStatus.CREATED).body(updatedBankAccount);
     }
 
-    @DeleteMapping("/{id}/delete")
+    @DeleteMapping("/delete")
     @Operation(summary = "Delete bank account by ID", responses = {@ApiResponse(responseCode = "202", description = "Bank account deleted successfully"), @ApiResponse(responseCode = "404", description = "Bank account not found"), @ApiResponse(responseCode = "500", description = "Internal server error")})
     public ResponseEntity<HttpStatus> deleteBankAccount(
             @Parameter(description = "ID of the bank account to delete", required = true)
-            @PathVariable int id) {
-        bankAccountService.deleteBankAccount(id);
+            @RequestHeader("Authorization") String token) {
+        bankAccountService.deleteBankAccount(jwtUtil.extractBankAccountId(token.replace("Bearer ", "")));
         return ResponseEntity.ok(HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("/{id}/get-cards")
+    @GetMapping("/get-cards")
     @Operation(summary = "Get all cards for a bank account", responses = {@ApiResponse(responseCode = "200", description = "Successfully retrieved cards"), @ApiResponse(responseCode = "404", description = "Bank account not found"), @ApiResponse(responseCode = "500", description = "Internal server error")})
     public List<Card> getAllCards(
             @Parameter(description = "ID of the bank account to retrieve cards for", required = true)
-            @PathVariable int id) {
-        return bankAccountService.getAllCards(id);
+            @RequestHeader("Authorization") String token) {
+        return bankAccountService.getAllCards(jwtUtil.extractBankAccountId(token.replace("Bearer ", "")));
     }
 
-    @GetMapping("/{id}/get-deposits")
+    @GetMapping("/get-deposits")
     @Operation(summary = "Get all deposits for a bank account", responses = {@ApiResponse(responseCode = "200", description = "Successfully retrieved deposits"), @ApiResponse(responseCode = "404", description = "Bank account not found"), @ApiResponse(responseCode = "500", description = "Internal server error")})
     public List<Deposit> getAllDeposits(
             @Parameter(description = "ID of the bank account to retrieve deposits for", required = true)
-            @PathVariable int id) {
-        return bankAccountService.getAllDeposits(id);
+            @RequestHeader("Authorization") String token) {
+        return bankAccountService.getAllDeposits(jwtUtil.extractBankAccountId(token.replace("Bearer ", "")));
     }
 
-    @GetMapping("/{id}/get-credits")
+    @GetMapping("/get-credits")
     @Operation(summary = "Get all credits for a bank account", responses = {@ApiResponse(responseCode = "200", description = "Successfully retrieved credits"), @ApiResponse(responseCode = "404", description = "Bank account not found"), @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     public List<Credit> getAllCredits(
             @Parameter(description = "ID of the bank account to retrieve credits for", required = true)
-            @PathVariable int id) {
-        return bankAccountService.getAllCredits(id);
+            @RequestHeader("Authorization") String token) {
+        return bankAccountService.getAllCredits(jwtUtil.extractBankAccountId(token.replace("Bearer ", "")));
     }
 }

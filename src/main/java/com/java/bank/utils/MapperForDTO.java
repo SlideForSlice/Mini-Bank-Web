@@ -1,7 +1,6 @@
 package com.java.bank.utils;
 
 import com.java.bank.controllers.DTO.BankAccountDTO;
-import com.java.bank.controllers.DTO.BankAccountIdDTO;
 import com.java.bank.controllers.DTO.CardTransDTO;
 import com.java.bank.controllers.DTO.AuthDTO;
 import com.java.bank.models.BankAccount;
@@ -27,10 +26,6 @@ public class MapperForDTO {
 
     public User convertToUser(AuthDTO userDTO) {
         return this.modelMapper.map(userDTO, User.class);
-    }
-
-    public BankAccount convertToBankAccountId(BankAccountIdDTO idBankAccount) {
-        return this.modelMapper.map(idBankAccount, BankAccount.class);
     }
 
     public Card convertCard(Card card) {

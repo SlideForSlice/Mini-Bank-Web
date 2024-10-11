@@ -40,11 +40,12 @@ public class BankAccountDTO {
 
     private String email;
 
-    private User userId;
-
-    private List<Credit> creditList;
-
-    private List<Card> cardList;
-
-    private List<Deposit> depositList;
+//    private User userId;
+//
+//
+//    private List<Credit> creditList;
+//
+//    private List<Card> cardList;
+//
+//    private List<Deposit> depositList;
 }
