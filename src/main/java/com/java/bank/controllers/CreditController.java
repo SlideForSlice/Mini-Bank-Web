@@ -50,11 +50,7 @@ public class CreditController {
 //    }
 
     @PostMapping("/create")
-    @Operation(summary = "Create a new credit for a bank account", responses = {
-            @ApiResponse(responseCode = "201", description = "Credit created successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid input data"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
-    })
+    @Operation(summary = "Create a new credit for a bank account", responses = {@ApiResponse(responseCode = "201", description = "Credit created successfully"), @ApiResponse(responseCode = "400", description = "Invalid input data"), @ApiResponse(responseCode = "500", description = "Internal server error")})
     public ResponseEntity<HttpStatus> createCredit(
             @Parameter(description = "Bank account ID to create credit for", required = true)
             @RequestHeader("Authorization") String token,
@@ -68,11 +64,7 @@ public class CreditController {
     }
 
     @DeleteMapping("/{id}/delete")
-    @Operation(summary = "Delete a credit by ID", responses = {
-            @ApiResponse(responseCode = "200", description = "Credit deleted successfully"),
-            @ApiResponse(responseCode = "404", description = "Credit not found"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
-    })
+    @Operation(summary = "Delete a credit by ID", responses = {@ApiResponse(responseCode = "200", description = "Credit deleted successfully"), @ApiResponse(responseCode = "404", description = "Credit not found"), @ApiResponse(responseCode = "500", description = "Internal server error")})
     public ResponseEntity<HttpStatus> deleteCredit(
             @Parameter(description = "ID of the credit to delete", required = true)
             @PathVariable int id) {
