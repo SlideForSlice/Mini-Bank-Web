@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -135,7 +135,7 @@ public class CreditService {
         LocalDate startDate = credit.getOpenDate();
         LocalDate endDate = credit.getEndDate();
 
-        long days = startDate.until(endDate).getDays();
+        long days = ChronoUnit.DAYS.between(startDate, endDate);;
         float dailyInterestRate = interestRate / 365;
         float interest = loanDebt * dailyInterestRate * days;
 

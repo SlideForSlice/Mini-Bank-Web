@@ -16,7 +16,7 @@ public class InterestSheduler {
     @Scheduled(cron = "0 0 0 * * ?")
     public void accrueInterestDayli(){
         creditService.accrueInterest();
-
+        depositService.accrueInterest();
     }
 
 }
