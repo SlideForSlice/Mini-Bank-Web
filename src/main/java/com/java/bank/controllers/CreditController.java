@@ -1,7 +1,7 @@
 package com.java.bank.controllers;
 
 import com.java.bank.controllers.DTO.CardTransDTO;
-import com.java.bank.models.BankAccount;
+import com.java.bank.models.Credit;
 import com.java.bank.repositories.CardRepository;
 import com.java.bank.security.JWTUtil;
 import com.java.bank.services.CardService;
@@ -26,7 +26,7 @@ import java.util.Map;
 @RequestMapping("/credit-service")
 @RestController
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
-@Tag(name = "F - Credit Service API", description = "Credit Service")
+@Tag(name = "Credit Service API", description = "Credit Service")
 @SecurityRequirement(name = "JWT")
 public class CreditController {
 
@@ -50,21 +50,22 @@ public class CreditController {
 //    }
 
     @PostMapping("/create")
-    @Operation(summary = "Create a new credit for a bank account", responses = {@ApiResponse(responseCode = "201", description = "Credit created successfully"), @ApiResponse(responseCode = "400", description = "Invalid input data"), @ApiResponse(responseCode = "500", description = "Internal server error")})
-    public ResponseEntity<HttpStatus> createCredit(
-            @Parameter(description = "Bank account ID to create credit for", required = true)
+    @Operation(summary = "Create a new credit for a bank account")
+    public ResponseEntity<Credit> createCredit(
+            @Parameter(description = "JWT Token for create credit", required = true)
             @RequestHeader("Authorization") String token,
             @Parameter(description = "Credit term in months", required = true)
             @RequestParam int creditTerm) {
         if (token == null || token.isEmpty()) {
             throw new IllegalArgumentException("Token is not provided");
         }
-        creditService.createCredit(jwtUtil.extractBankAccountId(token.replace("Bearer ", "")), creditTerm);
-        return ResponseEntity.ok(HttpStatus.CREATED);
+        Credit credit = creditService.createCredit(jwtUtil.extractBankAccountId(token.replace("Bearer ", "")), creditTerm);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(credit);
     }
 
     @DeleteMapping("/{id}/delete")
-    @Operation(summary = "Delete a credit by ID", responses = {@ApiResponse(responseCode = "200", description = "Credit deleted successfully"), @ApiResponse(responseCode = "404", description = "Credit not found"), @ApiResponse(responseCode = "500", description = "Internal server error")})
+    @Operation(summary = "Delete a credit by ID")
     public ResponseEntity<HttpStatus> deleteCredit(
             @Parameter(description = "ID of the credit to delete", required = true)
             @PathVariable int id) {
@@ -73,11 +74,7 @@ public class CreditController {
     }
 
     @PatchMapping("/{id}/cash-in")
-    @Operation(summary = "Cash in to a credit from a card", responses = {
-            @ApiResponse(responseCode = "200", description = "Cash in successful"),
-            @ApiResponse(responseCode = "404", description = "Credit or card not found"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
-    })
+    @Operation(summary = "Cash in to a credit from a card")
     public Map<String, Float> cashIn(
             @Parameter(description = "ID of the credit to cash in", required = true)
             @PathVariable int id,
@@ -92,19 +89,15 @@ public class CreditController {
             creditService.cashInToCreditFromCard(id, amount, cardNumber);
             float newCardBalance = cardRepository.findByCardNumber(cardNumber).get().getBalance();
             float newLoanDebt = creditService.getCreditById(id).get().getLoanDebt();
-            return Map.of("Credit balance", newLoanDebt,
-                    "Card balance", newCardBalance);
+            return Map.of("yourCreditBalance", newLoanDebt,
+                    "yourCardBalance", newCardBalance);
         } else {
             throw new CreditPaidException("Credit paid error");
         }
     }
 
     @PatchMapping("/{id}/cash-out")
-    @Operation(summary = "Cash out from a credit to a card", responses = {
-            @ApiResponse(responseCode = "200", description = "Cash out successful"),
-            @ApiResponse(responseCode = "404", description = "Credit or card not found"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
-    })
+    @Operation(summary = "Cash out from a credit to a card")
     public Map<String, Float> cashOut(
             @Parameter(description = "ID of the credit to cash out", required = true)
             @PathVariable int id,
@@ -116,14 +109,12 @@ public class CreditController {
         creditService.cashOutFromCreditToCard(id, amount, cardNumber);
         float cardBalance = cardRepository.findByCardNumber(cardNumber).get().getBalance();
         float loanDebt = creditService.getCreditById(id).get().getLoanDebt();
-        return Map.of("Credit balance", loanDebt,
-                "Card balance", cardBalance);
+        return Map.of("yourCreditBalance", loanDebt,
+                "yourCardBalance", cardBalance);
     }
 
     @ExceptionHandler
-    @Operation(summary = "Handle CreditPaidException", responses = {
-            @ApiResponse(responseCode = "400", description = "Credit already paid")
-    })
+    @Operation(summary = "Handle CreditPaidException")
     public ResponseEntity<CreditErrorResponse> handleException(CreditPaidException e) {
         CreditErrorResponse response = new CreditErrorResponse(
                 "Credit already paid!",

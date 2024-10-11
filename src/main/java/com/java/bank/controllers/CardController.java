@@ -2,6 +2,7 @@ package com.java.bank.controllers;
 
 import com.java.bank.controllers.DTO.CardTransDTO;
 import com.java.bank.models.Card;
+import com.java.bank.repositories.CardRepository;
 import com.java.bank.security.JWTUtil;
 import com.java.bank.services.CardService;
 import com.java.bank.utils.MapperForDTO;
@@ -29,9 +30,10 @@ public class CardController {
     private final CardService cardService;
     private final MapperForDTO mapperForDTO;
     private final JWTUtil jwtUtil;
+    private final CardRepository cardRepository;
 
 //    @GetMapping()
-//    @Operation(summary = "Get all cards by bank account", security = @SecurityRequirement(name = "JWT"), responses = {@ApiResponse(responseCode = "200", description = "Successfully retrieved cards"), @ApiResponse(responseCode = "404", description = "Bank account not found"), @ApiResponse(responseCode = "500", description = "Internal server error")})
+//    @Operation(summary = "Get all cards by bank account", security = @SecurityRequirement(name = "JWT"))
 //    public Optional<List<Card>> getAllCards(
 //            @RequestHeader("Authorization") String token) {
 //        List<Card> cards = cardService.getAllCardsByBankAccount(jwtUtil.extractBankAccountId(token.replace("Bearer ", "")));
@@ -39,7 +41,7 @@ public class CardController {
 //    }
 
     @PostMapping("/create")
-    @Operation(summary = "Create a new card for a bank account", responses = {@ApiResponse(responseCode = "201", description = "Card created successfully"), @ApiResponse(responseCode = "400", description = "Invalid input data"), @ApiResponse(responseCode = "500", description = "Internal server error")})
+    @Operation(summary = "Create a new card for a bank account")
     public ResponseEntity<Card> createCard(
             @RequestHeader("Authorization") String token) {
         if (token == null || token.isEmpty()) {
@@ -50,7 +52,7 @@ public class CardController {
     }
 
     @DeleteMapping("/{id}/delete")
-    @Operation(summary = "Delete a card by ID", responses = {@ApiResponse(responseCode = "200", description = "Card deleted successfully"), @ApiResponse(responseCode = "404", description = "Card not found"), @ApiResponse(responseCode = "500", description = "Internal server error")})
+    @Operation(summary = "Delete a card by ID")
     public ResponseEntity<HttpStatus> deleteCurrentCard(
             @Parameter(description = "ID of the card to delete", required = true) @PathVariable int id) {
         cardService.deleteCard(id);
@@ -58,27 +60,27 @@ public class CardController {
     }
 
     @PatchMapping("/{id}/cash-in")
-    @Operation(summary = "Cash in to a card by ID", responses = {@ApiResponse(responseCode = "200", description = "Cash in successful"), @ApiResponse(responseCode = "404", description = "Card not found"), @ApiResponse(responseCode = "500", description = "Internal server error")})
+    @Operation(summary = "Cash in to a card by ID")
     public Map<String, Float> cashIn(
             @Parameter(description = "ID of the card to cash in", required = true) @PathVariable int id,
             @Parameter(description = "Amount to cash in", required = true) @RequestParam float amount) {
         cardService.cashIn(id, amount);
         Optional<Card> card = cardService.getById(id);
-        return Map.of("balance", card.get().getBalance());
+        return Map.of("yourCardBalance", card.get().getBalance());
     }
 
     @PatchMapping("/{id}/cash-out")
-    @Operation(summary = "Cash out from a card by ID", responses = {@ApiResponse(responseCode = "200", description = "Cash out successful"), @ApiResponse(responseCode = "404", description = "Card not found"), @ApiResponse(responseCode = "500", description = "Internal server error")})
+    @Operation(summary = "Cash out from a card by ID")
     public Map<String, Float> cashOut(
             @Parameter(description = "ID of the card to cash out", required = true) @PathVariable int id,
             @Parameter(description = "Amount to cash out", required = true) @RequestParam float amount) {
         cardService.cashOut(id, amount);
         Optional<Card> card = cardService.getById(id);
-        return Map.of("balance", card.get().getBalance());
+        return Map.of("yourCardBalance", card.get().getBalance());
     }
 
     @PatchMapping("/{id}/send")
-    @Operation(summary = "Send money from one card to another", responses = {@ApiResponse(responseCode = "200", description = "Money sent successfully"), @ApiResponse(responseCode = "404", description = "Card not found"), @ApiResponse(responseCode = "500", description = "Internal server error")})
+    @Operation(summary = "Send money from one card to another")
     public Map<String, Float> send(
             @Parameter(description = "ID of the card to send money from", required = true) @PathVariable int id,
             @Parameter(description = "Amount to send", required = true) @RequestParam float amount,
@@ -86,6 +88,8 @@ public class CardController {
         String cardNumber = mapperForDTO.convertToCard(cardTransDTO).getCardNumber();
         cardService.sendMoneyOnOtherCard(id, amount, cardNumber);
         Optional<Card> card = cardService.getById(id);
-        return Map.of("balance", card.get().getBalance());
+        Optional<Card> anotherCard = cardRepository.findByCardNumber(cardNumber);
+        return Map.of("yourCardBalance", card.get().getBalance(),
+                "anotherCardBalance", anotherCard.get().getBalance());
     }
 }

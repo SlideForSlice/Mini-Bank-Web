@@ -28,7 +28,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
-@Tag(name = "B - Bank Account Service API", description = "Bank Account Service")
+@Tag(name = "Bank Account Service API", description = "Bank Account Service")
 @SecurityRequirement(name = "JWT")
 public class BankAccountController {
 
@@ -38,8 +38,7 @@ public class BankAccountController {
     private final MapperForDTO mapperForDTO;
 
     @GetMapping()
-    @Operation(summary = "Get bank account by ID", responses = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved bank account"), @ApiResponse(responseCode = "404", description = "Bank account not found"), @ApiResponse(responseCode = "500", description = "Internal server error")})
+    @Operation(summary = "Get bank account by ID")
     public BankAccountDTO getBankAccount(
             @Parameter(description = "Enter token to retrieve bank account id", required = true)
             @RequestHeader("Authorization") String token) {
@@ -48,10 +47,12 @@ public class BankAccountController {
     }
 
     @PatchMapping("/update")
-    @Operation(summary = "Update bank account by ID", responses = {@ApiResponse(responseCode = "201", description = "Bank account updated successfully"), @ApiResponse(responseCode = "404", description = "Bank account not found"), @ApiResponse(responseCode = "500", description = "Internal server error")})
+    @Operation(summary = "Update bank account by ID")
     public ResponseEntity<BankAccount> updateBankAccount(
-            @Parameter(description = "ID of the bank account to update", required = true) @RequestHeader("Authorization") String token,
-            @Parameter(description = "Updated bank account details", required = true) @RequestBody BankAccountDTO bankAccountDTOUpdated) {
+            @Parameter(description = "ID of the bank account to update", required = true)
+            @RequestHeader("Authorization") String token,
+            @Parameter(description = "Updated bank account details", required = true)
+            @RequestBody BankAccountDTO bankAccountDTOUpdated) {
         int id = jwtUtil.extractBankAccountId(token.replace("Bearer ", ""));
         BankAccount updatedBankAccount = mapperForDTO.convertToBankAccount(bankAccountDTOUpdated);
         bankAccountService.updateBankAccount(id, updatedBankAccount);
@@ -60,7 +61,7 @@ public class BankAccountController {
     }
 
     @DeleteMapping("/delete")
-    @Operation(summary = "Delete bank account by ID", responses = {@ApiResponse(responseCode = "202", description = "Bank account deleted successfully"), @ApiResponse(responseCode = "404", description = "Bank account not found"), @ApiResponse(responseCode = "500", description = "Internal server error")})
+    @Operation(summary = "Delete bank account by ID")
     public ResponseEntity<HttpStatus> deleteBankAccount(
             @Parameter(description = "ID of the bank account to delete", required = true)
             @RequestHeader("Authorization") String token) {
@@ -69,7 +70,7 @@ public class BankAccountController {
     }
 
     @GetMapping("/get-cards")
-    @Operation(summary = "Get all cards for a bank account", responses = {@ApiResponse(responseCode = "200", description = "Successfully retrieved cards"), @ApiResponse(responseCode = "404", description = "Bank account not found"), @ApiResponse(responseCode = "500", description = "Internal server error")})
+    @Operation(summary = "Get all cards for a bank account")
     public List<Card> getAllCards(
             @Parameter(description = "ID of the bank account to retrieve cards for", required = true)
             @RequestHeader("Authorization") String token) {
@@ -77,7 +78,7 @@ public class BankAccountController {
     }
 
     @GetMapping("/get-deposits")
-    @Operation(summary = "Get all deposits for a bank account", responses = {@ApiResponse(responseCode = "200", description = "Successfully retrieved deposits"), @ApiResponse(responseCode = "404", description = "Bank account not found"), @ApiResponse(responseCode = "500", description = "Internal server error")})
+    @Operation(summary = "Get all deposits for a bank account")
     public List<Deposit> getAllDeposits(
             @Parameter(description = "ID of the bank account to retrieve deposits for", required = true)
             @RequestHeader("Authorization") String token) {
@@ -85,8 +86,7 @@ public class BankAccountController {
     }
 
     @GetMapping("/get-credits")
-    @Operation(summary = "Get all credits for a bank account", responses = {@ApiResponse(responseCode = "200", description = "Successfully retrieved credits"), @ApiResponse(responseCode = "404", description = "Bank account not found"), @ApiResponse(responseCode = "500", description = "Internal server error")
-    })
+    @Operation(summary = "Get all credits for a bank account")
     public List<Credit> getAllCredits(
             @Parameter(description = "ID of the bank account to retrieve credits for", required = true)
             @RequestHeader("Authorization") String token) {
