@@ -30,13 +30,13 @@ public class CardController {
     private final MapperForDTO mapperForDTO;
     private final JWTUtil jwtUtil;
 
-    @GetMapping()
-    @Operation(summary = "Get all cards by bank account", security = @SecurityRequirement(name = "JWT"), responses = {@ApiResponse(responseCode = "200", description = "Successfully retrieved cards"), @ApiResponse(responseCode = "404", description = "Bank account not found"), @ApiResponse(responseCode = "500", description = "Internal server error")})
-    public Optional<List<Card>> getAllCards(
-            @RequestHeader("Authorization") String token) {
-        List<Card> cards = cardService.getAllCardsByBankAccount(jwtUtil.extractBankAccountId(token.replace("Bearer ", "")));
-        return cards.isEmpty() ? Optional.empty() : Optional.of(cards);
-    }
+//    @GetMapping()
+//    @Operation(summary = "Get all cards by bank account", security = @SecurityRequirement(name = "JWT"), responses = {@ApiResponse(responseCode = "200", description = "Successfully retrieved cards"), @ApiResponse(responseCode = "404", description = "Bank account not found"), @ApiResponse(responseCode = "500", description = "Internal server error")})
+//    public Optional<List<Card>> getAllCards(
+//            @RequestHeader("Authorization") String token) {
+//        List<Card> cards = cardService.getAllCardsByBankAccount(jwtUtil.extractBankAccountId(token.replace("Bearer ", "")));
+//        return cards.isEmpty() ? Optional.empty() : Optional.of(cards);
+//    }
 
     @PostMapping("/create")
     @Operation(summary = "Create a new card for a bank account", responses = {@ApiResponse(responseCode = "201", description = "Card created successfully"), @ApiResponse(responseCode = "400", description = "Invalid input data"), @ApiResponse(responseCode = "500", description = "Internal server error")})

@@ -36,18 +36,18 @@ public class CreditController {
     private final CardRepository cardRepository;
     private final JWTUtil jwtUtil;
 
-    @GetMapping()
-    @Operation(summary = "Get all credits for a bank account", responses = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved credits"),
-            @ApiResponse(responseCode = "404", description = "Bank account not found"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
-    })
-    public String getAllCredits(
-            @Parameter(description = "Bank account to retrieve credits for", required = true)
-            BankAccount idBankAccount) {
-        creditService.getCreditsByBankAccount(idBankAccount);
-        return "";
-    }
+//    @GetMapping()
+//    @Operation(summary = "Get all credits for a bank account", responses = {
+//            @ApiResponse(responseCode = "200", description = "Successfully retrieved credits"),
+//            @ApiResponse(responseCode = "404", description = "Bank account not found"),
+//            @ApiResponse(responseCode = "500", description = "Internal server error")
+//    })
+//    public String getAllCredits(
+//            @Parameter(description = "Bank account to retrieve credits for", required = true)
+//            BankAccount idBankAccount) {
+//        creditService.getCreditsByBankAccount(idBankAccount);
+//        return "";
+//    }
 
     @PostMapping("/create")
     @Operation(summary = "Create a new credit for a bank account", responses = {

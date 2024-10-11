@@ -35,6 +35,7 @@ public class BankAccountController {
     private final BankAccountService bankAccountService;
     private final MapperForDTO mapper;
     private final JWTUtil jwtUtil;
+    private final MapperForDTO mapperForDTO;
 
     @GetMapping()
     @Operation(summary = "Get bank account by ID", responses = {
@@ -50,11 +51,12 @@ public class BankAccountController {
     @Operation(summary = "Update bank account by ID", responses = {@ApiResponse(responseCode = "201", description = "Bank account updated successfully"), @ApiResponse(responseCode = "404", description = "Bank account not found"), @ApiResponse(responseCode = "500", description = "Internal server error")})
     public ResponseEntity<BankAccount> updateBankAccount(
             @Parameter(description = "ID of the bank account to update", required = true) @RequestHeader("Authorization") String token,
-            @Parameter(description = "Updated bank account details", required = true) @RequestBody BankAccount bankAccountUpdated) {
+            @Parameter(description = "Updated bank account details", required = true) @RequestBody BankAccountDTO bankAccountDTOUpdated) {
         int id = jwtUtil.extractBankAccountId(token.replace("Bearer ", ""));
-        bankAccountService.updateBankAccount(id, bankAccountUpdated);
-        BankAccount updatedBankAccount = bankAccountService.getBankAccountById(id).orElse(null);
-        return ResponseEntity.status(HttpStatus.CREATED).body(updatedBankAccount);
+        BankAccount updatedBankAccount = mapperForDTO.convertToBankAccount(bankAccountDTOUpdated);
+        bankAccountService.updateBankAccount(id, updatedBankAccount);
+        BankAccount bankAccount = bankAccountService.getBankAccountById(id).orElse(null);
+        return ResponseEntity.status(HttpStatus.CREATED).body(bankAccount);
     }
 
     @DeleteMapping("/delete")

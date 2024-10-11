@@ -32,18 +32,18 @@ public class DepositController {
     private final CardRepository cardRepository;
     private final JWTUtil jwtUtil;
 
-    @GetMapping
-    @Operation(summary = "Get all deposits for a bank account", responses = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved deposits"),
-            @ApiResponse(responseCode = "404", description = "Bank account not found"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
-    })
-    public String getAllDeposits(
-            @Parameter(description = "Bank account to retrieve deposits for", required = true)
-            BankAccount bankAccount) {
-        depositService.getDepositsByBankAccount(bankAccount);
-        return "";
-    }
+//    @GetMapping
+//    @Operation(summary = "Get all deposits for a bank account", responses = {
+//            @ApiResponse(responseCode = "200", description = "Successfully retrieved deposits"),
+//            @ApiResponse(responseCode = "404", description = "Bank account not found"),
+//            @ApiResponse(responseCode = "500", description = "Internal server error")
+//    })
+//    public String getAllDeposits(
+//            @Parameter(description = "Bank account to retrieve deposits for", required = true)
+//            BankAccount bankAccount) {
+//        depositService.getDepositsByBankAccount(bankAccount);
+//        return "";
+//    }
 
     @PostMapping("/create")
     @Operation(summary = "Create a new deposit for a bank account", responses = {@ApiResponse(responseCode = "201", description = "Deposit created successfully"), @ApiResponse(responseCode = "400", description = "Invalid input data"), @ApiResponse(responseCode = "500", description = "Internal server error")})
