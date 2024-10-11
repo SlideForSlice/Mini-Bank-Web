@@ -34,7 +34,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-@Tag(name = "User Registration API", description = "User Registration and authentication")
+@Tag(name = "A - User Registration and authorisation API", description = "User Registration and authentication")
 public class AuthController {
 
     private final RegistrationService registrationService;

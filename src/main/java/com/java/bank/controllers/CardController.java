@@ -23,7 +23,7 @@ import java.util.Optional;
 @RequestMapping("/card-service")
 @RestController
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
-@Tag(name = "Card Service API", description = "Card Service")
+@Tag(name = "D - Card Service API", description = "Card Service")
 @SecurityRequirement(name = "JWT")
 public class CardController {
     private final CardService cardService;

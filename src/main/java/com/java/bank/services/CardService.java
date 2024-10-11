@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -62,7 +63,7 @@ public class CardService {
         card.setCardNumber(cardNumber);
         card.setBankAccount(bankAccountRepository.findById(idBankAccount).get());
         card.setBalance(0);
-        card.setOpenDate(LocalDateTime.now());
+        card.setOpenDate(LocalDate.now());
         card.setCardStatus(CardStatus.ACTIVE);
 
         log.info("Create Card");
@@ -102,24 +103,8 @@ public class CardService {
     @Transactional
     public void sendMoneyOnOtherCard(int currentId, float amount, String recieverCardNum) {
         cashOut(currentId, amount);
-        int pukJopa = cardRepository.findByCardNumber(recieverCardNum).get().getId();
-        cashIn(pukJopa, amount);
-
-
-
-//        log.info("Send Money from (" + currentId + ") on other card (" + recieverCardNum + ") an amount " + amount);
-//        float currentBalance = cardRepository.findById(currentId).get().getBalance();
-//        float newBalance = currentBalance - amount;
-//        cardRepository.findById(currentId).get().setBalance(newBalance);
-//
-//        float recieverBalance = cardRepository.findByCardNumber(recieverCardNum).get().getBalance();
-//        float newRecieverBalance = recieverBalance + amount;
-//        cardRepository.findByCardNumber(recieverCardNum).get().setBalance(newRecieverBalance);
-//
-//        cardRepository.save(cardRepository.findById(currentId).get());
-//        cardRepository.save(cardRepository.findByCardNumber(recieverCardNum).get());
-//        log.info("New current balance: " + newBalance);
-//        log.info("New reciever balance: " + newRecieverBalance);
+        int cardNumber = cardRepository.findByCardNumber(recieverCardNum).get().getId();
+        cashIn(cardNumber, amount);
     }
 }
 

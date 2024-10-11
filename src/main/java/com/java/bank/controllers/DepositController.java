@@ -25,7 +25,7 @@ import java.util.Map;
 @RequestMapping("/deposit-service")
 @RestController
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
-@Tag(name = "Deposit Service API", description = "Deposit Service")
+@Tag(name = "E - Deposit Service API", description = "Deposit Service")
 @SecurityRequirement(name = "JWT")
 public class DepositController {
     private final DepositService depositService;

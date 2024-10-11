@@ -27,7 +27,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
-@Tag(name = "Bank Account Service API", description = "Bank Account Service")
+@Tag(name = "B - Bank Account Service API", description = "Bank Account Service")
 @SecurityRequirement(name = "JWT")
 public class BankAccountController {
 
