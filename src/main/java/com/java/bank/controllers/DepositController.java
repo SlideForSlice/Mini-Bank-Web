@@ -2,6 +2,7 @@ package com.java.bank.controllers;
 
 import com.java.bank.controllers.DTO.CardTransDTO;
 import com.java.bank.models.BankAccount;
+import com.java.bank.models.Deposit;
 import com.java.bank.repositories.CardRepository;
 import com.java.bank.security.JWTUtil;
 import com.java.bank.services.DepositService;
@@ -24,7 +25,7 @@ import java.util.Map;
 @RequestMapping("/deposit-service")
 @RestController
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
-@Tag(name = "E - Deposit Service API", description = "Deposit Service")
+@Tag(name = "Deposit Service API", description = "Deposit Service")
 @SecurityRequirement(name = "JWT")
 public class DepositController {
     private final DepositService depositService;
@@ -33,11 +34,7 @@ public class DepositController {
     private final JWTUtil jwtUtil;
 
 //    @GetMapping
-//    @Operation(summary = "Get all deposits for a bank account", responses = {
-//            @ApiResponse(responseCode = "200", description = "Successfully retrieved deposits"),
-//            @ApiResponse(responseCode = "404", description = "Bank account not found"),
-//            @ApiResponse(responseCode = "500", description = "Internal server error")
-//    })
+//    @Operation(summary = "Get all deposits for a bank account")
 //    public String getAllDeposits(
 //            @Parameter(description = "Bank account to retrieve deposits for", required = true)
 //            BankAccount bankAccount) {
@@ -46,19 +43,19 @@ public class DepositController {
 //    }
 
     @PostMapping("/create")
-    @Operation(summary = "Create a new deposit for a bank account", responses = {@ApiResponse(responseCode = "201", description = "Deposit created successfully"), @ApiResponse(responseCode = "400", description = "Invalid input data"), @ApiResponse(responseCode = "500", description = "Internal server error")})
-    public ResponseEntity<HttpStatus> createDeposit(
+    @Operation(summary = "Create a new deposit for a bank account")
+    public ResponseEntity<Deposit> createDeposit(
             @RequestHeader("Authorization") String token,
             @Parameter(description = "Deposit term in months", required = true) @RequestParam int depositTerm) {
         if (token == null || token.isEmpty()) {
             throw new IllegalArgumentException("Token is not provided");
         }
-        depositService.createDeposit(jwtUtil.extractBankAccountId(token.replace("Bearer ", "")), depositTerm);
-        return ResponseEntity.ok(HttpStatus.CREATED);
+        Deposit deposit = depositService.createDeposit(jwtUtil.extractBankAccountId(token.replace("Bearer ", "")), depositTerm);
+        return ResponseEntity.status(HttpStatus.CREATED).body(deposit);
     }
 
     @DeleteMapping("/{id}/delete")
-    @Operation(summary = "Delete a deposit by ID", responses = {@ApiResponse(responseCode = "200", description = "Deposit deleted successfully"), @ApiResponse(responseCode = "404", description = "Deposit not found"), @ApiResponse(responseCode = "500", description = "Internal server error")})
+    @Operation(summary = "Delete a deposit by ID")
     public ResponseEntity<HttpStatus> deleteDeposit(
             @Parameter(description = "ID of the deposit to delete", required = true)
             @PathVariable int id) {
@@ -67,7 +64,7 @@ public class DepositController {
     }
 
     @PatchMapping("/{id}/cash-in")
-    @Operation(summary = "Cash in to a deposit from a card", responses = {@ApiResponse(responseCode = "200", description = "Cash in successful"), @ApiResponse(responseCode = "404", description = "Deposit or card not found"), @ApiResponse(responseCode = "500", description = "Internal server error")})
+    @Operation(summary = "Cash in to a deposit from a card")
     public Map<String, Float> cashIn(
             @Parameter(description = "ID of the deposit to cash in", required = true) @PathVariable int id,
             @Parameter(description = "Amount to cash in", required = true) @RequestParam float amount,
@@ -79,15 +76,15 @@ public class DepositController {
             depositService.cashInToDepositFromCard(id, amount, cardNumber);
             float newCardBalance = cardRepository.findByCardNumber(cardNumber).get().getBalance();
             float newDepositBalance = depositService.getDepositById(id).get().getBalance();
-            return Map.of("Deposit balance", newDepositBalance,
-                    "Card balance", newCardBalance);
+            return Map.of("depositBalance", newDepositBalance,
+                    "cardBalance", newCardBalance);
         } else {
             throw new RuntimeException("Not enough balance");
         }
     }
 
     @PatchMapping("/{id}/cash-out")
-    @Operation(summary = "Cash out from a deposit to a card", responses = {@ApiResponse(responseCode = "200", description = "Cash out successful"), @ApiResponse(responseCode = "404", description = "Deposit or card not found"), @ApiResponse(responseCode = "500", description = "Internal server error")})
+    @Operation(summary = "Cash out from a deposit to a card")
     public Map<String, Float> cashOut(
             @Parameter(description = "ID of the deposit to cash out", required = true) @PathVariable int id,
             @Parameter(description = "Amount to cash out", required = true) @RequestParam float amount,
@@ -98,8 +95,8 @@ public class DepositController {
             depositService.cashOutToCardFromDeposit(id, amount, cardNumber);
             float newCardBalance = cardRepository.findByCardNumber(cardNumber).get().getBalance();
             float newDepositBalance = depositService.getDepositById(id).get().getBalance();
-            return Map.of("Deposit balance", newDepositBalance,
-                    "Card balance", newCardBalance);
+            return Map.of("depositBalance", newDepositBalance,
+                    "cardBalance", newCardBalance);
         } else {
             throw new RuntimeException("Not enough deposit balance");
         }

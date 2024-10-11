@@ -34,7 +34,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-@Tag(name = "A - User Registration and authorisation API", description = "User Registration and authentication")
+@Tag(name = "User Registration and authorisation API", description = "User Registration and authentication")
 public class AuthController {
 
     private final RegistrationService registrationService;
@@ -47,12 +47,12 @@ public class AuthController {
     private final UserRepository userRepository;
 
     @PostMapping("/registration")
-    @Operation(summary = "Регистрация юзера через логин и пароль", responses = {@ApiResponse(responseCode = "200", description = "Successfully registered user"), @ApiResponse(responseCode = "400", description = "Invalid input data"), @ApiResponse(responseCode = "500", description = "Internal server error")})
+    @Operation(summary = "Регистрация юзера через логин и пароль")
     public Map<String, String> performRegistrationUserCreds(
             @Parameter(description = "User data for registration (username + password)", required = true)
-            @RequestBody @Valid AuthDTO userDTO, BindingResult bindingResult
+            @RequestBody @Valid AuthDTO authDTO, BindingResult bindingResult
     ) {
-        User user = mapper.convertToUser(userDTO);
+        User user = mapper.convertToUser(authDTO);
         userValidator.validate(user, bindingResult);
         if (bindingResult.hasErrors()) {
             StringBuilder errors = new StringBuilder();
@@ -64,14 +64,15 @@ public class AuthController {
         }
         registrationService.register(user);
         String token = jwtUtil.generateToken(user.getUsername(), user.getId());
-        return Map.of("token", token);
+        return Map.of("yourToken", token);
     }
 
     @PostMapping("/registration/details")
-    @Operation(summary = "Добавление банковских деталей пользователя", responses = {@ApiResponse(responseCode = "201", description = "Bank account details added successfully"), @ApiResponse(responseCode = "400", description = "Invalid input data"), @ApiResponse(responseCode = "401", description = "Unauthorized"), @ApiResponse(responseCode = "500", description = "Internal server error")})
+    @Operation(summary = "Добавление банковских деталей пользователя")
     public ResponseEntity<HttpStatus> performRegistrationBankAccDetails(
             @Parameter(description = "Bank account details", required = true)
-            @RequestBody @Valid BankAccountDTO bankAccountDTO, BindingResult bindingResult, @RequestHeader("Authorization") String token) {
+            @RequestBody @Valid BankAccountDTO bankAccountDTO, BindingResult bindingResult,
+            @RequestHeader("Authorization") String token) {
         if (token == null || token.isEmpty()) {
             throw new IllegalArgumentException("Token is not provided");
         }
@@ -101,7 +102,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    @Operation(summary = "Authenticate user and generate JWT token", responses = {@ApiResponse(responseCode = "200", description = "Successfully authenticated"), @ApiResponse(responseCode = "400", description = "Invalid input data"), @ApiResponse(responseCode = "401", description = "Unauthorized"), @ApiResponse(responseCode = "500", description = "Internal server error")})
+    @Operation(summary = "Authenticate user and generate JWT token")
     public Map<String, String> performLogin(
             @Parameter(description = "User credentials (username + password)", required = true)
             @RequestBody AuthDTO authDTO) {
@@ -114,7 +115,7 @@ public class AuthController {
         }
         int id = userRepository.findByUsername(authDTO.getUsername()).get().getId();
         String token = jwtUtil.generateToken(authDTO.getUsername(), id);
-        return Map.of("token", token);
+        return Map.of("yourToken", token);
     }
 
     @ExceptionHandler

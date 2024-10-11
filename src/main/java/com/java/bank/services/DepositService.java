@@ -40,7 +40,7 @@ public class DepositService {
     }
 
     @Transactional
-    public void createDeposit(int idBankAccount, int depositTerm) {
+    public Deposit createDeposit(int idBankAccount, int depositTerm) {
 
         Deposit deposit = new Deposit();
 
@@ -59,6 +59,7 @@ public class DepositService {
         log.info("Create Deposit");
 
         depositRepository.save(deposit);
+        return deposit;
     }
 
 

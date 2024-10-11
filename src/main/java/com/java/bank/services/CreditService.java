@@ -40,7 +40,7 @@ public class CreditService {
     }
 
     @Transactional
-    public void createCredit(int idBankAccount, int creditTerm) {
+    public Credit createCredit(int idBankAccount, int creditTerm) {
 
         Credit credit = new Credit();
 
@@ -58,6 +58,8 @@ public class CreditService {
         credit.setCreditStatus(CreditStatus.ACTIVE);
         log.info("Credit created");
         creditRepository.save(credit);
+
+        return credit;
     }
 
 
