@@ -38,7 +38,7 @@ public class BankAccountController {
     private final MapperForDTO mapperForDTO;
 
     @GetMapping()
-    @Operation(summary = "Get bank account by ID")
+    @Operation(summary = "Get bank account")
     public BankAccountDTO getBankAccount(
             @Parameter(description = "Enter token to retrieve bank account id", required = true)
             @RequestHeader("Authorization") String token) {
@@ -48,7 +48,7 @@ public class BankAccountController {
 
     @PatchMapping("/update")
     @Operation(summary = "Update bank account by ID")
-    public ResponseEntity<BankAccount> updateBankAccount(
+    public ResponseEntity<BankAccountDTO> updateBankAccount(
             @Parameter(description = "ID of the bank account to update", required = true)
             @RequestHeader("Authorization") String token,
             @Parameter(description = "Updated bank account details", required = true)
@@ -57,7 +57,8 @@ public class BankAccountController {
         BankAccount updatedBankAccount = mapperForDTO.convertToBankAccount(bankAccountDTOUpdated);
         bankAccountService.updateBankAccount(id, updatedBankAccount);
         BankAccount bankAccount = bankAccountService.getBankAccountById(id).orElse(null);
-        return ResponseEntity.status(HttpStatus.CREATED).body(bankAccount);
+        BankAccountDTO bankAccountDTO = mapper.convertToBankAccountDTO(bankAccount);
+        return ResponseEntity.status(HttpStatus.CREATED).body(bankAccountDTO);
     }
 
     @DeleteMapping("/delete")
