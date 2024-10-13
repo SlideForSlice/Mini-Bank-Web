@@ -62,8 +62,8 @@ public class CardController {
     @PatchMapping("/{id}/cash-in")
     @Operation(summary = "Cash in to a card by ID")
     public Map<String, Float> cashIn(
-            @Parameter(description = "ID of the card to cash in", required = true) @PathVariable int id,
-            @Parameter(description = "Amount to cash in", required = true) @RequestParam float amount) {
+            @Parameter(description = "Card ID", required = true) @PathVariable int id,
+            @Parameter(description = "Amount", required = true) @RequestParam float amount) {
         cardService.cashIn(id, amount);
         Optional<Card> card = cardService.getById(id);
         return Map.of("yourCardBalance", card.get().getBalance());
@@ -72,8 +72,8 @@ public class CardController {
     @PatchMapping("/{id}/cash-out")
     @Operation(summary = "Cash out from a card by ID")
     public Map<String, Float> cashOut(
-            @Parameter(description = "ID of the card to cash out", required = true) @PathVariable int id,
-            @Parameter(description = "Amount to cash out", required = true) @RequestParam float amount) {
+            @Parameter(description = "Card ID", required = true) @PathVariable int id,
+            @Parameter(description = "Amount", required = true) @RequestParam float amount) {
         cardService.cashOut(id, amount);
         Optional<Card> card = cardService.getById(id);
         return Map.of("yourCardBalance", card.get().getBalance());
@@ -82,8 +82,8 @@ public class CardController {
     @PatchMapping("/{id}/send")
     @Operation(summary = "Send money from one card to another")
     public Map<String, Float> send(
-            @Parameter(description = "ID of the card to send money from", required = true) @PathVariable int id,
-            @Parameter(description = "Amount to send", required = true) @RequestParam float amount,
+            @Parameter(description = "Card ID to send money from", required = true) @PathVariable int id,
+            @Parameter(description = "Amount", required = true) @RequestParam float amount,
             @Parameter(description = "Card details to send money to", required = true) @RequestBody CardTransDTO cardTransDTO) {
         String cardNumber = mapperForDTO.convertToCard(cardTransDTO).getCardNumber();
         cardService.sendMoneyOnOtherCard(id, amount, cardNumber);
