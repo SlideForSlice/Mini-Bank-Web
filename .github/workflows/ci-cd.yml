@@ -23,6 +23,9 @@ jobs:
           password: ${{secrets.SERVER_PASSWORD}}
           port: 22
           script: | 
+            # Переход в директорию проекта
+            cd Mini-Bank-Web/ || { echo "Failed to change directory to /Mini-bank-web"; exit 1; }
+            
             # Создание файла .env на удаленном сервере
             echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > .env
             echo "DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}" >> .env
@@ -31,7 +34,6 @@ jobs:
             echo "DATABASE_NAME=${{ secrets.DATABASE_NAME }}" >> .env
 
             # Переход в директорию проекта и выполнение команд
-            cd Mini-Bank-Web/ || { echo "Failed to change directory to /Mini-bank-web"; exit 1; }
             sudo docker-compose down || { echo "Failed to stop and remove containers"; exit 1; }
             git pull
             mvn clean install || { echo "Failed to run mvn clean install"; exit 1; }
