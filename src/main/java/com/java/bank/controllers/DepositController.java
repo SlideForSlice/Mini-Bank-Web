@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -25,7 +26,7 @@ import java.util.Map;
 @RequestMapping("/deposit-service")
 @RestController
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
-@Tag(name = "Deposit Service API", description = "Deposit Service")
+@Tag(name = "Deposit controller", description = "CRUD for deposit controller")
 @SecurityRequirement(name = "JWT")
 public class DepositController {
     private final DepositService depositService;
@@ -45,7 +46,7 @@ public class DepositController {
     @PostMapping("/create")
     @Operation(summary = "Create a new deposit for a bank account")
     public ResponseEntity<Deposit> createDeposit(
-            @RequestHeader("Authorization") String token,
+            @Parameter(description = "Enter JWT Token", required = true) @RequestHeader("Authorization") String token,
             @Parameter(description = "Deposit term in months", required = true) @RequestParam int depositTerm) {
         if (token == null || token.isEmpty()) {
             throw new IllegalArgumentException("Token is not provided");
