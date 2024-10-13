@@ -28,7 +28,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
-@Tag(name = "Bank Account", description = "CRUD for bank account ")
+@Tag(name = "Bank Account Controller", description = "CRUD for bank account ")
 @SecurityRequirement(name = "JWT")
 public class BankAccountController {
 

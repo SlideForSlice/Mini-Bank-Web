@@ -36,7 +36,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Tag(
 
-        name = "User Registration and Bank Account Registration",
+        name = "User controller",
         description = "User Registration, authentication, bank account registration"
 )
 

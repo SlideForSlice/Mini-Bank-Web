@@ -26,7 +26,7 @@ import java.util.Map;
 @RequestMapping("/credit-service")
 @RestController
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
-@Tag(name = "Credit Service API", description = "Credit Service")
+@Tag(name = "Credit controller", description = "Credit Service")
 @SecurityRequirement(name = "JWT")
 public class CreditController {
 
