@@ -23,6 +23,16 @@ jobs:
           password: ${{secrets.SERVER_PASSWORD}}
           port: 22
           script: | 
+            # Установка переменных окружения
+            echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> ~/.bashrc
+            echo "DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}" >> ~/.bashrc
+            echo "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> ~/.bashrc
+            echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> ~/.bashrc
+            
+            # Применение изменений в текущей сессии
+            source ~/.bashrc
+
+            # Переход в директорию проекта и выполнение команд
             cd Mini-Bank-Web/ || { echo "Failed to change directory to /Mini-bank-web"; exit 1; }
             sudo docker-compose down || { echo "Failed to stop and remove containers"; exit 1; }
             git pull
