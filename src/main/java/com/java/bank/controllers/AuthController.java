@@ -34,7 +34,12 @@ import java.util.Map;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-@Tag(name = "User Registration and authorisation API", description = "User Registration and authentication")
+@Tag(
+
+        name = "User Registration and Bank Account Registration",
+        description = "User Registration, authentication, bank account registration"
+)
+
 public class AuthController {
 
     private final RegistrationService registrationService;
@@ -47,9 +52,9 @@ public class AuthController {
     private final UserRepository userRepository;
 
     @PostMapping("/registration")
-    @Operation(summary = "Регистрация юзера через логин и пароль")
+    @Operation(summary = "User registration")
     public Map<String, String> performRegistrationUserCreds(
-            @Parameter(description = "User data for registration (username + password)", required = true)
+            @Parameter(description = "User data for registration", required = true)
             @RequestBody @Valid AuthDTO authDTO, BindingResult bindingResult
     ) {
         User user = mapper.convertToUser(authDTO);
@@ -68,9 +73,9 @@ public class AuthController {
     }
 
     @PostMapping("/registration/details")
-    @Operation(summary = "Добавление банковских деталей пользователя")
+    @Operation(summary = "Bank account registration")
     public ResponseEntity<HttpStatus> performRegistrationBankAccDetails(
-            @Parameter(description = "Bank account details", required = true)
+            @Parameter(description = "Bank account data", required = true)
             @RequestBody @Valid BankAccountDTO bankAccountDTO, BindingResult bindingResult,
             @RequestHeader("Authorization") String token) {
         if (token == null || token.isEmpty()) {
@@ -102,9 +107,9 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    @Operation(summary = "Authenticate user and generate JWT token")
+    @Operation(summary = "User authentication")
     public Map<String, String> performLogin(
-            @Parameter(description = "User credentials (username + password)", required = true)
+            @Parameter(description = "User data", required = true)
             @RequestBody AuthDTO authDTO) {
         UsernamePasswordAuthenticationToken authToken =
                 new UsernamePasswordAuthenticationToken(authDTO.getUsername(), authDTO.getPassword());

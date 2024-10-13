@@ -28,7 +28,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
-@Tag(name = "Bank Account Service API", description = "Bank Account Service")
+@Tag(name = "Bank Account", description = "CRUD for bank account ")
 @SecurityRequirement(name = "JWT")
 public class BankAccountController {
 
@@ -38,9 +38,9 @@ public class BankAccountController {
     private final MapperForDTO mapperForDTO;
 
     @GetMapping()
-    @Operation(summary = "Get bank account")
+    @Operation(summary = "Get bank account by JWT")
     public BankAccountDTO getBankAccount(
-            @Parameter(description = "Enter token to retrieve bank account id", required = true)
+            @Parameter(description = "Enter JWT Token", required = true)
             @RequestHeader("Authorization") String token) {
         int id = jwtUtil.extractBankAccountId(token.replace("Bearer ", ""));
         return mapper.convertToBankAccountDTO(bankAccountService.getBankAccountById(id).orElse(null));
@@ -49,9 +49,9 @@ public class BankAccountController {
     @PatchMapping("/update")
     @Operation(summary = "Update bank account by ID")
     public ResponseEntity<BankAccountDTO> updateBankAccount(
-            @Parameter(description = "ID of the bank account to update", required = true)
+            @Parameter(description = "Bank account ID", required = true)
             @RequestHeader("Authorization") String token,
-            @Parameter(description = "Updated bank account details", required = true)
+            @Parameter(description = "Strings, which you want to update", required = true)
             @RequestBody BankAccountDTO bankAccountDTOUpdated) {
         int id = jwtUtil.extractBankAccountId(token.replace("Bearer ", ""));
         BankAccount updatedBankAccount = mapperForDTO.convertToBankAccount(bankAccountDTOUpdated);
@@ -64,32 +64,32 @@ public class BankAccountController {
     @DeleteMapping("/delete")
     @Operation(summary = "Delete bank account by ID")
     public ResponseEntity<HttpStatus> deleteBankAccount(
-            @Parameter(description = "ID of the bank account to delete", required = true)
+            @Parameter(description = "Bank account ID", required = true)
             @RequestHeader("Authorization") String token) {
         bankAccountService.deleteBankAccount(jwtUtil.extractBankAccountId(token.replace("Bearer ", "")));
         return ResponseEntity.ok(HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/get-cards")
-    @Operation(summary = "Get all cards for a bank account")
+    @Operation(summary = "Get all cards by bank account ID")
     public List<Card> getAllCards(
-            @Parameter(description = "ID of the bank account to retrieve cards for", required = true)
+            @Parameter(description = "Bank account ID", required = true)
             @RequestHeader("Authorization") String token) {
         return bankAccountService.getAllCards(jwtUtil.extractBankAccountId(token.replace("Bearer ", "")));
     }
 
     @GetMapping("/get-deposits")
-    @Operation(summary = "Get all deposits for a bank account")
+    @Operation(summary = "Get all deposits by bank account ID")
     public List<Deposit> getAllDeposits(
-            @Parameter(description = "ID of the bank account to retrieve deposits for", required = true)
+            @Parameter(description = "Bank account ID", required = true)
             @RequestHeader("Authorization") String token) {
         return bankAccountService.getAllDeposits(jwtUtil.extractBankAccountId(token.replace("Bearer ", "")));
     }
 
     @GetMapping("/get-credits")
-    @Operation(summary = "Get all credits for a bank account")
+    @Operation(summary = "Get all credits by bank account ID")
     public List<Credit> getAllCredits(
-            @Parameter(description = "ID of the bank account to retrieve credits for", required = true)
+            @Parameter(description = "Bank account ID", required = true)
             @RequestHeader("Authorization") String token) {
         return bankAccountService.getAllCredits(jwtUtil.extractBankAccountId(token.replace("Bearer ", "")));
     }

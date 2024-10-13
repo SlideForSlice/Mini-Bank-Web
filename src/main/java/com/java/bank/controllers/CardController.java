@@ -24,7 +24,7 @@ import java.util.Optional;
 @RequestMapping("/card-service")
 @RestController
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
-@Tag(name = "Card Service API", description = "Card Service")
+@Tag(name = "Card", description = "CRUD for Card")
 @SecurityRequirement(name = "JWT")
 public class CardController {
     private final CardService cardService;
@@ -41,7 +41,7 @@ public class CardController {
 //    }
 
     @PostMapping("/create")
-    @Operation(summary = "Create a new card for a bank account")
+    @Operation(summary = "Create a new card with JWT")
     public ResponseEntity<Card> createCard(
             @RequestHeader("Authorization") String token) {
         if (token == null || token.isEmpty()) {
@@ -54,7 +54,7 @@ public class CardController {
     @DeleteMapping("/{id}/delete")
     @Operation(summary = "Delete a card by ID")
     public ResponseEntity<HttpStatus> deleteCurrentCard(
-            @Parameter(description = "ID of the card to delete", required = true) @PathVariable int id) {
+            @Parameter(description = "Card ID", required = true) @PathVariable int id) {
         cardService.deleteCard(id);
         return ResponseEntity.ok(HttpStatus.OK);
     }
