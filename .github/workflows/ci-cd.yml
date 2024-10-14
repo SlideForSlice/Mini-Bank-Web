@@ -28,6 +28,7 @@ jobs:
             
             # Создание файла .env на удаленном сервере
             echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > .env
+            echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
             echo "DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}" >> .env
             echo "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> .env
             echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
@@ -38,5 +39,5 @@ jobs:
             git pull
             mvn clean install || { echo "Failed to run mvn clean install"; exit 1; }
             sudo docker-compose build || { echo "Failed to build containers"; exit 1; }
-            sudo docker-compose up -d || { echo "Failed to start containers"; exit 1; }
+            sudo docker-compose up || { echo "Failed to start containers"; exit 1; }
             
