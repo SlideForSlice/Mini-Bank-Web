@@ -34,9 +34,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-@Tag(
-
-        name = "User controller",
+@Tag(        name = "Auth controller",
         description = "User Registration, authentication, bank account registration"
 )
 
