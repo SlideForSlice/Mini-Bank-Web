@@ -95,13 +95,6 @@ public class BankAccountValidator implements Validator {
         } else if (!bankAccount.getPhoneNumber().matches("^9\\d{9}$")) {
             errors.rejectValue("phoneNumber", "", "Wrong number format. Enter your phone number without +7 or 8");
         }
-
-        // Проверка email
-        if (bankAccount.getEmail() == null || bankAccount.getEmail().isEmpty()) {
-            errors.rejectValue("email", "", "Email couldn't be empty");
-        } else if (!bankAccount.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
-            errors.rejectValue("email", "", "Email is not valid");
-        }
     }
 
 }

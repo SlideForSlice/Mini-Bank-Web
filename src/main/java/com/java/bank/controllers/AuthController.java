@@ -120,13 +120,13 @@ public class AuthController {
         String token = jwtUtil.generateToken(authDTO.getUsername(), id);
         return Map.of("yourToken", token);
     }
-
-    @ExceptionHandler
-    private ResponseEntity<UserErrorResponse> handleException(JWTVerificationException e) {
-        UserErrorResponse response = new UserErrorResponse(
-                "Token is not generated!",
-                System.currentTimeMillis()
-        );
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
+//
+//    @ExceptionHandler
+//    private ResponseEntity<UserErrorResponse> handleException(JWTVerificationException e) {
+//        UserErrorResponse response = new UserErrorResponse(
+//                "Token is not generated!",
+//                System.currentTimeMillis()
+//        );
+//        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+//    }
 }
