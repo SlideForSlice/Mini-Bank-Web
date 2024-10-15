@@ -32,11 +32,12 @@ public class BankAccountDTO {
 
     @NotNull(message = "date of birth couldn't be empty")
 //    @Pattern(regexp = "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$", message = "enter date in YYYY-MM-DD format")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Past(message = "date of birth couldn't be in future")
     private LocalDate dateOfBirth;
 
     @NotNull(message = "address couldn't be empty")
-    @Size(min = 10, max = 200, message = "Enter correct address")
+    @Size(min = 10, max = 300, message = "Enter correct address")
     private String address;
 
     @NotNull(message = "phone number couldn't be empty")
