@@ -21,7 +21,7 @@ public class BankAccountDTO {
 
 
     @NotNull(message = "name couldn't be empty")
-    @Size(min = 20, max = 150, message = "name should be from 20 to 150 symbols long")
+    @Size(min = 10, max = 150, message = "name should be from 20 to 150 symbols long")
     @Pattern(regexp = "^[A-Z][a-z]+ [A-Z][a-z]+ [A-Z][a-z]+$", message = "use pattern 'Ivanov Ivan Ivanovich'")
     private String fullName;
 
@@ -31,7 +31,6 @@ public class BankAccountDTO {
     private String passportNumber;
 
     @NotNull(message = "date of birth couldn't be empty")
-//    @Pattern(regexp = "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$", message = "enter date in YYYY-MM-DD format")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Past(message = "date of birth couldn't be in future")
     private LocalDate dateOfBirth;

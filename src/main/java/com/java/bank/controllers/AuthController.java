@@ -29,6 +29,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 @RestController
@@ -72,33 +73,24 @@ public class AuthController {
 
     @PostMapping("/registration/details")
     @Operation(summary = "Bank account registration")
-    public ResponseEntity<HttpStatus> performRegistrationBankAccDetails(
+    public ResponseEntity<?> performRegistrationBankAccDetails(
             @Parameter(description = "Bank account data", required = true)
             @RequestBody @Valid BankAccountDTO bankAccountDTO, BindingResult bindingResult,
             @RequestHeader("Authorization") String token) {
-        if (token == null || token.isEmpty()) {
-            throw new IllegalArgumentException("Token is not provided");
-        }
 
         String jwtToken = token.replace("Bearer ", "");
-        System.out.println("Received Token: " + jwtToken);
         int id = jwtUtil.extractUserId(jwtToken);
-        System.out.println("Extracted User ID: " + id);
-
         User user = userRepository.findById(id);
-        if (user == null) {
-            throw new IllegalArgumentException("User not found");
-        }
 
         BankAccount bankAccount = mapper.convertToBankAccount(bankAccountDTO);
         bankAccount.setUserId(user);
         bankAccountValidator.validate(bankAccount, bindingResult);
         if (bindingResult.hasErrors()) {
-            StringBuilder errors = new StringBuilder();
+            Map<String, String> errors = new HashMap<>();
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
-                errors.append(fieldError.getField()).append(" : ").append(fieldError.getDefaultMessage()).append("\n");
+                errors.put(fieldError.getField(), fieldError.getDefaultMessage());
             }
-            throw new JWTVerificationException(errors.toString());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
         }
         bankAccountService.createBankAccount(bankAccount);
         return ResponseEntity.ok(HttpStatus.CREATED);
@@ -120,13 +112,5 @@ public class AuthController {
         String token = jwtUtil.generateToken(authDTO.getUsername(), id);
         return Map.of("yourToken", token);
     }
-//
-//    @ExceptionHandler
-//    private ResponseEntity<UserErrorResponse> handleException(JWTVerificationException e) {
-//        UserErrorResponse response = new UserErrorResponse(
-//                "Token is not generated!",
-//                System.currentTimeMillis()
-//        );
-//        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-//    }
+
 }

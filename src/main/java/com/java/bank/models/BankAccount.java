@@ -55,7 +55,6 @@ public class BankAccount{
     private String phoneNumber;
 
     @Column(name="email")
-//    @NotNull(message = "email couldn't be empty")
     @Email(message = "Email is not valid")
     private String email;
 

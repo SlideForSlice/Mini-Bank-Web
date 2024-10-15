@@ -33,11 +33,11 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/login", "auth/registration", "auth/registration/details",
+                        .requestMatchers("/auth/login", "auth/registration",
                                 "/error").permitAll()
                         .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/api/swagger/**",
                                 "/webjars/**", "/api/**").permitAll()
-                        .requestMatchers("/bank-account-service/**", "/card-service/**",
+                        .requestMatchers( "auth/registration/details", "/bank-account-service/**", "/card-service/**",
                                 "/credit-service/**", "/deposit-service/**", "user-service/**")
                         .hasAnyRole("USER")
                                 .anyRequest().authenticated()
